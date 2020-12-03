@@ -1,7 +1,7 @@
 const calamitylaserii = extend(BasicBulletType, {
 	
 	update: function(b){
-		Effects.shake(1.2, 1.2, b.x, b.y);
+		Effect.shake(1.2, 1.2, b.x, b.y);
 		if(b.timer.get(1, 5)){
 			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), 390.0, true);
 		};
@@ -31,7 +31,8 @@ const calamitylaserii = extend(BasicBulletType, {
 	
 	hit: function(b, hitx, hity){
 		if(hitx != null && hity != null){
-			Effects.effect(this.hitEffect, Color.valueOf("ec7458aa"), hitx, hity);
+			//Effect.effect(this.hitEffect, Color.valueOf("ec7458aa"), hitx, hity);
+			this.hitEffect.at(hitx, hity, Color.valueOf("ec7458aa"));
 			if(Mathf.chance(0.15)){
 				Damage.createIncend(hitx, hity, 7, 1);
 			}

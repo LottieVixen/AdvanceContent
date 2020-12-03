@@ -40,5 +40,5 @@
 		{ "item": "advance-alloy", "amount": 270 }
 	],
 	"category": "turret",
-	"research": "ac-calamity",
+	"research": "ac-calamity"
 }

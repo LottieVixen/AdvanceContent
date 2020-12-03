@@ -1,5 +1,5 @@
 {
-	"type": "GroundUnit",
+	"type": "mech",
 	"name": "Annihilator",
 	"description": "Destroys Walls and disables shields Like theres no tomorrow",
 	"maxVelocity": 0.45,

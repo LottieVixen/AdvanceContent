@@ -1,5 +1,5 @@
 {
-	"type": "FlyingUnit",
+	"type": "flying",
 	"name": "Rapid-T1",
 	"description": "Shoots Rapidly.",
 	"flying": true,

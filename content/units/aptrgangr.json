@@ -1,5 +1,5 @@
 {
-	"type": "MinerDrone",
+	"type": "flying",
 	"name": "Aptrgangr",
 	"description": "A powerful miner drone",
 	"flying": true,

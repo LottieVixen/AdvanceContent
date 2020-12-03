@@ -1,5 +1,5 @@
 {
-	"type": "GroundUnit",
+	"type": "mech",
 	"name": "Eliminator",
 	"description": "A unit that shoots explosives.",
 	"maxVelocity": 0.45,
@@ -40,7 +40,7 @@
 			"hitEffect": "explosion",
 			"knockback": 3,
 			"splashDamage": 180,
-			"splashDamageRadius": 80,
+			"splashDamageRadius": 80
 		}
 	}
 }

@@ -1,5 +1,5 @@
 {
-	"type": "GroundUnit",
+	"type": "mech",
 	"name": "Abolisher",
 	"description": "Destroys things, properly.",
 	"maxVelocity": 0.45,
@@ -35,7 +35,7 @@
 			"bulletHeight": 10,
 			"bulletShrink": 0,
 			"hitSize": 6,
-			"knockback": 1,
+			"knockback": 1
 		}
 	}
 }

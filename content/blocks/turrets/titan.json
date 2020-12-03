@@ -11,12 +11,12 @@
 	"rotatespeed": 2.1,
 	"shootCone": 7,
 	"outlineColor": "ffd54c",
-	"ammo": {
+	"ammoTypes": {
 		"thorium": {
 			"type": "ArtilleryBulletType",
 			"speed": 5.2,
 			"recoil": 8,
-			"lifetime": 40
+			"lifetime": 40,
 			"bulletWidth": 17,
 			"bulletHeight": 20,
 			"bulletShrink": 0,
@@ -28,13 +28,13 @@
 			"ammoMultiplier": 4,
 			"collidesTiles": true,
 			"collidesAir": true,
-			"collides": true,
+			"collides": true
 		},
 		"blast-compound": {
 			"type": "ArtilleryBulletType",
 			"speed": 5.1,
 			"recoil": 8,
-			"lifetime": 40
+			"lifetime": 40,
 			"bulletWidth": 16,
 			"bulletHeight": 19,
 			"bulletShrink": 0,
@@ -46,14 +46,14 @@
 			"ammoMultiplier": 4,
 			"collidesTiles": true,
 			"collidesAir": true,
-			"collides": true,
+			"collides": true
 		}
 	},
 	"requirements": [
 		{ "item": "graphite", "amount": 250 },
 		{ "item": "titanium", "amount": 200 },
 		{ "item": "thorium", "amount": 120 },
-		{ "item": "plastanium", "amount": 70 },
+		{ "item": "plastanium", "amount": 70 }
 	],
 	"category": "turret",
 	"research": "chain"

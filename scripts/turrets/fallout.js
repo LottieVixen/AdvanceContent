@@ -9,7 +9,8 @@ const falloutlaser = extend(BasicBulletType, {
 	
 	hit: function(b, hitx, hity){
 		if(hitx != null && hity != null){
-			Effects.effect(this.hitEffect, Color.valueOf("ec7458aa"), hitx, hity);
+			//Effects.effect(this.hitEffect, Color.valueOf("ec7458aa"), hitx, hity);
+			this.hitEffect.at(hitx, hity, Color.valueOf("ec7458aa"));
 			if(Mathf.chance(0.1)){
 				//Fire.create(world.tileWorld(hitx + Mathf.range(6.0), hity + Mathf.range(6.0)));
 				Damage.createIncend(hitx, hity, 6, 1);

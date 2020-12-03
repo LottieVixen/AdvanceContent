@@ -2,7 +2,7 @@
 	"size": 7,
 	"health": 7900,
 	"range": 290,
-	"reload": 160,
+	"reloadTime": 160,
 	"coolantMultiplier": 1.4,
 	"shootCone": 40,
 	"shootDuration": 310,
@@ -10,7 +10,7 @@
 	"shootShake": 3,
 	"firingMoveFract": 0.16,
 	"shootEffect": "shootBigSmoke2",
-	"recoil": 8,
+	"recoilAmount": 8,
 	"localizedName": "Xeno Corruptor",
 	"description": "Converts weak units into your team. Damages itself per conversion and converted enemies are weaker.",
 	"hasPower": true,
@@ -19,7 +19,7 @@
 	"activeSound": "xeno-beam",
 	"activeSoundVolume": 2,
 	"heatColor": "59a7ff",
-	"rotatespeed": 1.95,
+	"rotateSpeed": 1.95,
 	"expanded": true,
 	"consumes": {
 		"liquid": {

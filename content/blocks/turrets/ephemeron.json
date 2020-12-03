@@ -7,7 +7,7 @@
 	"shootCone": 30,
 	"powerUse": 26,
 	"shootShake": 2,
-	"recoil": 4,
+	"recoilAmount": 4,
 	"localizedName": "Ephemeron",
 	"description": "Shoots a bullet that creates multiple bullet with an anti-bullet partner that explodes when they collide.",
 	"hasPower": true,

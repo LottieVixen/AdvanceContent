@@ -8,7 +8,7 @@
 	"speed": 0.11,
 	"drag": 0.035,
 	"mass": 8.8,
-	"rotatespeed": 0.02,
+	"rotateSpeed": 0.02,
 	"baseRotateSpeed": 0.09,
 	"health": 1750,
 	"range": 170,
@@ -21,7 +21,7 @@
 		"name": "tiny-equip",
 		"width": 9.2,
 		"alternate": true,
-		"reload": 20,
+		"reloadTime": 20,
 		"ejectEffect": "none",
 		"inaccuracy": 1,
 		"bullet": {

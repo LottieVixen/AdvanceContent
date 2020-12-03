@@ -6,7 +6,7 @@
 	"speed": 0.1,
 	"drag": 0.45,
 	"mass": 9,
-	"rotatespeed": 0.03,
+	"rotateSpeed": 0.03,
 	"baseRotateSpeed": 0.01,
 	"hitsizeTile": 15,
 	"hitsize": 40,
@@ -21,7 +21,7 @@
 		"width": 30,
 		"alternate": true,
 		"recoil": 6,
-		"reload": 60,
+		"reloadTime": 60,
 		"shootSound": "shootBig",
 		"bullet": {
 			"type": "ArtilleryBulletType",

@@ -4,7 +4,7 @@
 	"health": 4000,
 	"size": 4,
 	"liquidCapacity": 30,
-	"reload": 2,
+	"reloadTime": 2,
 	"shots": 2,
 	"range": 160,
 	"shootCone": 50,

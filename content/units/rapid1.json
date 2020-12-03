@@ -7,7 +7,7 @@
 	"speed": 0.4,
 	"drag": 0.02,
 	"mass": 1.6,
-	"rotatespeed": 0.17,
+	"rotateSpeed": 0.17,
 	"health": 70,
 	"range": 110,
 	"shootCone": 7,
@@ -15,7 +15,7 @@
 	"weapon": {
 		"name": "rapid-equip",
 		"alternate": true,
-		"reload": 6,
+		"reloadTime": 6,
 		"ejectEffect": "shellEjectSmall",
 		"inaccuracy": 1,
 		"bullet": {

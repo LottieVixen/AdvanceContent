@@ -3,7 +3,7 @@
 	"description": "A powerful version of Fuse.",
 	"health": 3520,
 	"size": 4,
-	"reload": 40,
+	"reloadTime": 40,
 	"range": 120,
 	"ammoUseEffect": "none",
 	"shootSound": "shotgun",

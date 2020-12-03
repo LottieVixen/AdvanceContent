@@ -17,7 +17,7 @@
 	"weapon": {
 		"name": "halberd-equip",
 		"length": 1,
-		"reload": 12.5,
+		"reloadTime": 12.5,
 		"shootSound": "shootSnap",
 		"alternate": true,
 		"bullet": "standardGlaive"

@@ -6,7 +6,7 @@
 	"speed": 0.29,
 	"drag": 0.25,
 	"mass": 8,
-	"rotatespeed": 0.05,
+	"rotateSpeed": 0.05,
 	"baseRotateSpeed": 0.03,
 	"hitsizeTile": 16,
 	"hitsize": 37,
@@ -28,7 +28,7 @@
 		"width": 27.5,
 		"alternate": true,
 		"recoil": 2,
-		"reload": 120,
+		"reloadTime": 120,
 		"shootSound": "shootSnap",
 		"bullet": {
 			"type": "BasicBulletType",

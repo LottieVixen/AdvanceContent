@@ -3,7 +3,7 @@
 	"description": "Destroys, Everything.",
 	"health": 5400,
 	"size": 5,
-	"reload": 45,
+	"reloadTime": 45,
 	"ammoUseEffect": "none",
 	"shootSound": "shotgun",
 	"restitution": 0.1,

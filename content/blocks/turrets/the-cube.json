@@ -7,7 +7,7 @@
 	"chargeTime": 120,
 	"powerUse": 120,
 	"coolantMultiplier": 1.1,
-	"reload": 240,
+	"reloadTime": 240,
 	"outlineIcon": false,
 	"expanded": true,
 	"shootSound": "cube-shoot",

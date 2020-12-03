@@ -11,7 +11,7 @@
 	"rotateWeapon": true,
 	"engineOffset": 70,
 	"engineSize": 24,
-	"rotatespeed": 0.02,
+	"rotateSpeed": 0.02,
 	"baseRotateSpeed": 0.08,
 	"range": 120,
 	"attackLength": 110,
@@ -24,12 +24,12 @@
 		"freezing"
 	],
 	"weapon": {
-		"name": "decapitator-equip"
+		"name": "decapitator-equip",
 		"alternate": true,
 		"length": 8,
 		"width": 27,
 		"recoil": 1,
-		"reload": 170,
+		"reloadTime": 170,
 		"shootSound": "decapitator-shoot",
 		"bullet": {
 			"type": "ArtilleryBulletType",
@@ -68,7 +68,7 @@
 				"hitSize": 7,
 				"incendChance": 0.1,
 				"incendAmount": 3,
-				"incendSpread": 10,
+				"incendSpread": 10
 			}
 		}
 	}

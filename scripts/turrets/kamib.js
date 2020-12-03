@@ -18,9 +18,9 @@ const spellCardOver = elib.newEffectWDraw(87, 1300, e => {
 	const vec2 = new Vec2();
 	//const lastVec = new Vec2();
 	//const rand = new Vec2();
-	var power = new Interpolation.PowOut(2).apply(e.fin());
-	var power2 = new Interpolation.PowOut(3).apply(e.fin());
-	var power3 = Interpolation.pow4Out.apply(e.fin());
+	var power = new Interp.PowOut(2).apply(e.fin());
+	var power2 = new Interp.PowOut(3).apply(e.fin());
+	var power3 = Interp.pow4Out.apply(e.fin());
 	var customSlope = (0.5 - Math.abs(power3 - 0.5)) * 2;
 	
 	if(settingLib.settingCustomSpriteBatch()){
@@ -59,7 +59,7 @@ const spellCardOver = elib.newEffectWDraw(87, 1300, e => {
 	var poly2 = [];
 	//var lenRand = Mathf.range(2);
 	Draw.blend(Blending.additive);
-	Draw.color(Color.valueOf("ff0000").shiftHue(Time.time()));
+	Draw.color(Color.valueOf("ff0000").shiftHue(Time.time));
 	Lines.stroke(12 * e.fslope());
 	
 	//Fill.circle(e.x, e.y, power3 * 570);
@@ -67,13 +67,13 @@ const spellCardOver = elib.newEffectWDraw(87, 1300, e => {
 	vec.trns(e.rotation, e.finpow() * 340);
 	
 	for(var i = 0; i < sides; i++){
-		var rand = Mathf.randomSeed(Mathf.round(Time.time() * 270 + e.id + i), 0, 160) / 160;
-		var smooth = Interpolation.pow2.apply(rand);
-		//vec.trns(360 / sides * i + e.rotation, power * 340 + (Mathf.randomSeed(Mathf.round(Time.time() * 270 + e.id + i), -60, 60) * e.finpow())).add(e.x, e.y);
+		var rand = Mathf.randomSeed(Mathf.round(Time.time * 270 + e.id + i), 0, 160) / 160;
+		var smooth = Interp.pow2.apply(rand);
+		//vec.trns(360 / sides * i + e.rotation, power * 340 + (Mathf.randomSeed(Mathf.round(Time.time * 270 + e.id + i), -60, 60) * e.finpow())).add(e.x, e.y);
 		vec.trns(360 / sides * i + e.rotation, power * 540 + (smooth * 60 * e.fin())).add(e.x, e.y);
 		
-		rand = Mathf.randomSeed(Mathf.round(Time.time() * 270 + e.id + i + sides), 0, 230) / 230;
-		smooth = Interpolation.pow2.apply(rand);
+		rand = Mathf.randomSeed(Mathf.round(Time.time * 270 + e.id + i + sides), 0, 230) / 230;
+		smooth = Interp.pow2.apply(rand);
 		
 		vec2.trns(360 / sides * i + e.rotation, power2 * 440 + (smooth * 190 * e.fin())).add(e.x, e.y);
 		
@@ -84,7 +84,7 @@ const spellCardOver = elib.newEffectWDraw(87, 1300, e => {
 	};
 	Lines.polyline(poly, sides * 2, true);
 	
-	Draw.color(Color.valueOf("ff0000").shiftHue(Time.time() + 40));
+	Draw.color(Color.valueOf("ff0000").shiftHue(Time.time + 40));
 	
 	Lines.polyline(poly2, sides * 2, true);
 	
@@ -97,13 +97,13 @@ const spellCardOver = elib.newEffectWDraw(87, 1300, e => {
 
 const clearEffect = newEffect(35, e => {
 	//const curve1 = e.finpow();
-	//const curve1 = Interpolation.pow3In.apply(e.fin());
+	//const curve1 = Interp.pow3In.apply(e.fin());
 	//const curve2 = Mathf.curve(e.fout(), 0, 0.3);
 	//const lerpx = Mathf.lerp(e.x, e.data.x, curve1);
 	//const lerpy = Mathf.lerp(e.y, e.data.y, curve1);
 	Draw.blend(Blending.additive);
 	
-	Draw.color(Color.valueOf("ff0000").shiftHue(Time.time()));
+	Draw.color(Color.valueOf("ff0000").shiftHue(Time.time));
 	//Fill.circle(lerpx, lerpy, curve2 * 4);
 	Lines.stroke(2.5);
 	Lines.swirl(e.x, e.y, 11, e.fout(), (e.fin() * Mathf.randomSeedRange(e.id, 45)) + e.rotation + 180);
@@ -115,7 +115,7 @@ const clearEffect = newEffect(35, e => {
 
 const bulletLarge = extend(BasicBulletType, {
 	draw(b){
-		Draw.color(Color.valueOf("ff0000").shiftHue(Time.time()));
+		Draw.color(Color.valueOf("ff0000").shiftHue(Time.time));
 		Fill.circle(b.x, b.y, this.radius);
 		
 		Draw.color();
@@ -135,7 +135,7 @@ bulletLarge.radius = 8.5;
 
 const bulletSlowAlt = extend(BasicBulletType, {
 	draw(b){
-		Draw.color(Color.valueOf("ff0000").shiftHue(Time.time()));
+		Draw.color(Color.valueOf("ff0000").shiftHue(Time.time));
 		Fill.circle(b.x, b.y, this.radius);
 		
 		Draw.color();
@@ -152,7 +152,7 @@ bulletSlowAlt.radius = 4.5;
 
 const bulletSlow = extend(BasicBulletType, {
 	draw(b){
-		Draw.color(Color.valueOf("ff0000").shiftHue(Time.time()));
+		Draw.color(Color.valueOf("ff0000").shiftHue(Time.time));
 		Fill.circle(b.x, b.y, this.radius);
 		
 		Draw.color();
@@ -205,7 +205,7 @@ const kami = extendContent(PowerTurret, "curtain-of-bullets", {
 	draw(tile){
 		Draw.rect(this.baseRegion, tile.drawx(), tile.drawy());
 		for(var l = 0; l < 4; l++){
-			Draw.color(Color.valueOf("ff0000").shiftHue(Time.time() + (l * 17)));
+			Draw.color(Color.valueOf("ff0000").shiftHue(Time.time + (l * 17)));
 			Draw.rect(this.rainbowRegion[l], tile.drawx(), tile.drawy());
 		};
 		Draw.color();
@@ -222,7 +222,7 @@ const kami = extendContent(PowerTurret, "curtain-of-bullets", {
 				
 				this.tr.trns(entity.rotation + (90 * sign), entity.reload * 290);
 				
-				Draw.color(Color.valueOf("ff0000").shiftHue(Time.time()));
+				Draw.color(Color.valueOf("ff0000").shiftHue(Time.time));
 				Fill.circle(this.tr.x + tile.drawx(), this.tr.y + tile.drawy(), Mathf.curve(entity.reload, 0, 0.2) * 12);
 			};
 		};
@@ -230,7 +230,7 @@ const kami = extendContent(PowerTurret, "curtain-of-bullets", {
 			for(var s = 0; s < 3; s++){
 				this.tr.trns(360 / 3 * s + entity.rotation, entity.reload * 290);
 				
-				Draw.color(Color.valueOf("ff0000").shiftHue(Time.time()));
+				Draw.color(Color.valueOf("ff0000").shiftHue(Time.time));
 				Fill.circle(this.tr.x + tile.drawx(), this.tr.y + tile.drawy(), Mathf.curve(entity.reload, 0, 0.2) * 12);
 			}
 		};
@@ -242,7 +242,7 @@ const kami = extendContent(PowerTurret, "curtain-of-bullets", {
 				if(target != null) angle = Angles.angle(this.tr.x + tile.drawx(), this.tr.y + tile.drawy(), target.getX(), target.getY());
 				//if(entity.shots > 3500 && entity.shots < 3570) Draw.alpha
 				
-				Draw.color(Color.valueOf("ff0000").shiftHue(Time.time()));
+				Draw.color(Color.valueOf("ff0000").shiftHue(Time.time));
 				if(entity.shots > 3500 && entity.shots < 3570) Draw.alpha((entity.shots - 3500) / 70);
 				
 				Draw.rect(this.gunRegion, this.tr.x + tile.drawx(), this.tr.y + tile.drawy(), angle - 90);
@@ -266,7 +266,7 @@ const kami = extendContent(PowerTurret, "curtain-of-bullets", {
 			if(target != null) angle = Angles.angle(this.tr.x + tile.drawx(), this.tr.y + tile.drawy(), target.getX(), target.getY());
 			//if(entity.shots > 3500 && entity.shots < 3570) Draw.alpha
 			
-			Draw.color(Color.valueOf("ff0000").shiftHue(Time.time()));
+			Draw.color(Color.valueOf("ff0000").shiftHue(Time.time));
 			
 			Draw.rect(this.gunRegion, this.tr.x + tile.drawx(), this.tr.y + tile.drawy(), angle - 90);
 			//Fill.circle(this.tr.x + tile.drawx(), this.tr.y + tile.drawy(), Mathf.curve(entity.reload, 0, 0.2) * 12);
@@ -279,7 +279,7 @@ const kami = extendContent(PowerTurret, "curtain-of-bullets", {
 		this.tr.x = Mathf.sin(entity.shots, 89 * 1.5, entity.reload * 290);
 		this.tr.y = Mathf.sin(entity.shots + 90, 127 * 1.5, entity.reload * 160);
 		
-		Draw.color(Color.valueOf("ff0000").shiftHue(Time.time()));
+		Draw.color(Color.valueOf("ff0000").shiftHue(Time.time));
 		Fill.circle(this.tr.x + tile.drawx(), this.tr.y + tile.drawy(), Mathf.curve(entity.reload, 0, 0.2) * 12);
 	},
 	
@@ -376,18 +376,18 @@ const kami = extendContent(PowerTurret, "curtain-of-bullets", {
 			if(b != null){
 				if(Mathf.within(tile.drawx(), tile.drawy(), b.x, b.y, this.range) && b.getOwner() == entity){
 					b.scaleTime(Mathf.lerp(b.time(), b.getBulletType().lifetime, 0.999));
-					b.velocity(0.001, b.rot());
+					b.velocity(0.001, b.vel.angle());
 					b.deflect();
 					//const vec = new Vec2()
 					//if(target instanceof TileEntity || target instanceof BaseUnit) vec.set(tile.drawx(), tile.drawy());
 					//if(target instanceof Player) vec.set(target.getX(), target.getY());
 					
-					Effects.effect(clearEffect, b.x, b.y, Mathf.range(20));
+					Effect.effect(clearEffect, b.x, b.y, Mathf.range(20));
 				}
 			}
 		}));
 		
-		Effects.effect(spellCardOver, tile.drawx(), tile.drawy());
+		Effect.effect(spellCardOver, tile.drawx(), tile.drawy());
 		this.breakSound.at(tile, Mathf.random(0.95, 1.05));
 	},
 	

@@ -29,17 +29,17 @@ const celsSmoke = newEffect(13, e => {
 const celsBullet = extend(BasicBulletType, {
 	update: function(b){
 		if(b.timer.get(0, 1 + b.fslope() * 0.5)){
-			Effects.effect(this.trailEffect, this.backColor, b.x + Mathf.range(0.6), b.y + Mathf.range(0.6), b.rot());
+			Effect.effect(this.trailEffect, this.backColor, b.x + Mathf.range(0.6), b.y + Mathf.range(0.6), b.vel.angle());
 		};
 		
 		if(Mathf.chance(0.7)){
-			Effects.effect(celsSmoke, this.backColor, b.x + Mathf.range(1.7), b.y + Mathf.range(1.7), b.rot());
+			Effect.effect(celsSmoke, this.backColor, b.x + Mathf.range(1.7), b.y + Mathf.range(1.7), b.vel.angle());
 		}
 	},
 	
 	draw: function(b){
 		Draw.color(Color.valueOf("a9d8ff"), Color.valueOf("4f72e1"), b.fin());
-		Fill.poly(b.x, b.y, 6, 3 + b.fin() * 4.1, b.rot() + b.fin() * 270);
+		Fill.poly(b.x, b.y, 6, 3 + b.fin() * 4.1, b.vel.angle() + b.fin() * 270);
 		Draw.reset();
 	}
 });
@@ -59,7 +59,7 @@ celsBullet.collidesTiles = true;
 celsBullet.collidesAir = true;
 celsBullet.pierce = true;
 celsBullet.statusDuration = 770;
-celsBullet.status = StatusEffects.burning;
+celsBullet.status = StatusEffect.burning;
 //fahrBullet.frontColor = Color.valueOf("ffffff");
 //fahrBullet.backColor = Color.valueOf("a9d8ff");
 

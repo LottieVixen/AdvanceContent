@@ -32,7 +32,7 @@ const flakEffectPlast = newEffect(17, e => {
 	}});
 	
 	e.scaled(9, cons(s => {
-		Lines.circle(s.x, s.y, 14 + Mathf.randomSeed(e.id + Mathf.round(Time.time() * 240), 0, 14) * s.fin());
+		Lines.circle(s.x, s.y, 14 + Mathf.randomSeed(e.id + Mathf.round(Time.time * 240), 0, 14) * s.fin());
 	}));
 	//Lines.circle(e.x, e.y, 14 + Mathf.range(0, 14) * e.fin());
 	
@@ -64,7 +64,7 @@ const flakEffectSurge = newEffect(17, e => {
 	}});
 	
 	e.scaled(8, cons(s => {
-		Lines.circle(s.x, s.y, 17 + Mathf.randomSeed(e.id + Mathf.round(Time.time() * 240), 0, 17) * s.fin());
+		Lines.circle(s.x, s.y, 17 + Mathf.randomSeed(e.id + Mathf.round(Time.time * 240), 0, 17) * s.fin());
 	}));
 	//Lines.circle(e.x, e.y, 14 + Mathf.range(0, 14) * e.fin());
 	
@@ -96,7 +96,7 @@ const flakEffect = newEffect(17, e => {
 	}});
 	
 	e.scaled(8, cons(s => {
-		Lines.circle(s.x, s.y, 14 + Mathf.randomSeed(e.id + Mathf.round(Time.time() * 240), 0, 14) * s.fin());
+		Lines.circle(s.x, s.y, 14 + Mathf.randomSeed(e.id + Mathf.round(Time.time * 240), 0, 14) * s.fin());
 	}));
 	//Lines.circle(e.x, e.y, 14 + Mathf.range(0, 14) * e.fin());
 	
@@ -113,13 +113,13 @@ const pointSurge = extend(BasicBulletType, {
 		
 		Vars.bulletGroup.intersect(b.x - radius, b.y - radius, radius * 2, radius * 2, cons(e => {
 			if(e != null){
-				if(Mathf.within(b.x, b.y, e.x, e.y, radius) && e != b && e.getTeam() != b.getTeam()){
+				if(Mathf.within(b.x, b.y, e.x, e.y, radius) && e != b && e.getTeam() != b.team){
 					var type = e.getBulletType();
 					var damageB = type.damage + type.splashDamage;
 					
 					vec.set(e.x, e.y);
 					
-					Effects.effect(fakeLightning, b.x, b.y, 0, vec);
+					Effect.effect(fakeLightning, b.x, b.y, 0, vec);
 					
 					e.scaleTime(Mathf.lerp(type.lifetime, 0, Mathf.clamp((damageB - this.splashDamage) / damageB, 0, 1)));
 					e.velocity().x = e.velocity().x * Mathf.clamp((damageB - this.speedDamage) / damageB, 0, 1);
@@ -137,7 +137,7 @@ const pointSurge = extend(BasicBulletType, {
 		Vars.bulletGroup.intersect(b.x - radius, b.y - radius, radius * 2, radius * 2, cons(e => {
 			if(e != null){
 				var dst2 = Mathf.dst2(e.x, e.y, b.x, b.y);
-				if(Mathf.within(b.x, b.y, e.x, e.y, radius) && (result == null || result == b || dst2 < cdist) && e != b && e.getTeam() != b.getTeam()){
+				if(Mathf.within(b.x, b.y, e.x, e.y, radius) && (result == null || result == b || dst2 < cdist) && e != b && e.getTeam() != b.team){
 					var type = e.getBulletType();
 					cdist = dst2;
 					result = e;
@@ -175,7 +175,7 @@ const pointPlastic = extend(BasicBulletType, {
 		
 		Vars.bulletGroup.intersect(b.x - radius, b.y - radius, radius * 2, radius * 2, cons(e => {
 			if(e != null){
-				if(Mathf.within(b.x, b.y, e.x, e.y, radius) && e != b && e.getTeam() != b.getTeam()){
+				if(Mathf.within(b.x, b.y, e.x, e.y, radius) && e != b && e.getTeam() != b.team){
 					var type = e.getBulletType();
 					var damageB = type.damage + type.splashDamage;
 					
@@ -195,7 +195,7 @@ const pointPlastic = extend(BasicBulletType, {
 		Vars.bulletGroup.intersect(b.x - radius, b.y - radius, radius * 2, radius * 2, cons(e => {
 			if(e != null){
 				var dst2 = Mathf.dst2(e.x, e.y, b.x, b.y);
-				if(Mathf.within(b.x, b.y, e.x, e.y, radius) && (result == null || result == b || dst2 < cdist) && e != b && e.getTeam() != b.getTeam()){
+				if(Mathf.within(b.x, b.y, e.x, e.y, radius) && (result == null || result == b || dst2 < cdist) && e != b && e.getTeam() != b.team){
 					var type = e.getBulletType();
 					cdist = dst2;
 					result = e;
@@ -234,7 +234,7 @@ const pointFlak = extend(BasicBulletType, {
 		
 		Vars.bulletGroup.intersect(b.x - radius, b.y - radius, radius * 2, radius * 2, cons(e => {
 			if(e != null){
-				if(Mathf.within(b.x, b.y, e.x, e.y, radius) && e != b && e.getTeam() != b.getTeam()){
+				if(Mathf.within(b.x, b.y, e.x, e.y, radius) && e != b && e.getTeam() != b.team){
 					var type = e.getBulletType();
 					var damageB = type.damage + type.splashDamage;
 					
@@ -254,7 +254,7 @@ const pointFlak = extend(BasicBulletType, {
 		Vars.bulletGroup.intersect(b.x - radius, b.y - radius, radius * 2, radius * 2, cons(e => {
 			if(e != null){
 				var dst2 = Mathf.dst2(e.x, e.y, b.x, b.y);
-				if(Mathf.within(b.x, b.y, e.x, e.y, radius) && (result == null || result == b || dst2 < cdist) && e != b && e.getTeam() != b.getTeam()){
+				if(Mathf.within(b.x, b.y, e.x, e.y, radius) && (result == null || result == b || dst2 < cdist) && e != b && e.getTeam() != b.team){
 					var type = e.getBulletType();
 					cdist = dst2;
 					result = e;

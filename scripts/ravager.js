@@ -24,7 +24,7 @@ const pointDefenceLaser = elib.newEffectWDraw(32, 1300, e => {
 		Fill.circle(pos2.x, pos2.y, strokes[i] * 4 * e.fout());
 		
 		Lines.stroke(strokes[i] * 4 * e.fout());
-		Lines.line(pos1.x, pos1.y, pos2.x, pos2.y, CapStyle.none);
+		Lines.line(pos1.x, pos1.y, pos2.x, pos2.y, false);
 	}
 });
 
@@ -174,14 +174,14 @@ var createLeg = prov(() => {
 				//tempVec.add(this._owner.velocity().x, this._owner.velocity().y);
 				if(this._targetedPosition.epsilonEquals(tempVec, 0.25) || this._lastPos.epsilonEquals(tempVec, 0.08)){
 					if(!this.getFloor().isLiquid){
-						Effects.effect(stepEffect, this.getFloor().color, this._targetedPosition.x, this._targetedPosition.y, this._effectSize);
+						Effect.effect(stepEffect, this.getFloor().color, this._targetedPosition.x, this._targetedPosition.y, this._effectSize);
 						Sounds.bang.at(this._targetedPosition.x, this._targetedPosition.y, Mathf.random(0.9, 1.1) * 0.5);
 					}else{
-						Effects.effect(stepRipple, this.getFloor().color, this._targetedPosition.x, this._targetedPosition.y, this._effectSize);
+						Effect.effect(stepRipple, this.getFloor().color, this._targetedPosition.x, this._targetedPosition.y, this._effectSize);
 						Sounds.splash.at(this._targetedPosition.x, this._targetedPosition.y, Mathf.random(0.9, 1.1) * 0.65);
 					};
 					if(this._effectSize / 26 > 0.1){
-						Effects.shake(this._effectSize / 26, this._effectSize / 26, this._targetedPosition.x, this._targetedPosition.y);
+						Effect.shake(this._effectSize / 26, this._effectSize / 26, this._targetedPosition.x, this._targetedPosition.y);
 					};
 					if(this._stepDamage > 0.01){
 						Damage.damage(this._owner.getTeam(), this._targetedPosition.x, this._targetedPosition.y, this._effectSize, this._stepDamage);
@@ -432,7 +432,7 @@ const ravagerMain = prov(() => {
 				const rangeD = 312;
 				
 				Vars.bulletGroup.intersect(this.x - rangeD, this.y - rangeD, rangeD * 2, rangeD * 2, cons(b => {
-					if(Mathf.within(this.x, this.y, b.x, b.y, rangeD) && b.getBulletType() != null && b.getTeam() != this.getTeam() && !(b instanceof Lightning)){
+					if(Mathf.within(this.x, this.y, b.x, b.y, rangeD) && b.getBulletType() != null && b.team != this.getTeam() && !(b instanceof Lightning)){
 						var piercing = b.getBulletType().pierce ? 60 : 1;
 						var tmpDamage = b.getBulletType().damage + b.getBulletType().splashDamage * piercing;
 						var currentBType = b.getBulletType();
@@ -451,7 +451,7 @@ const ravagerMain = prov(() => {
 							
 							currentBType = currentBType.fragBullet;
 						};
-						//var extraDamage = b.getBulletType().pierce ? (this.getSize() / b.getBulletType().speed) * Time.delta() : 1;
+						//var extraDamage = b.getBulletType().pierce ? (this.getSize() / b.getBulletType().speed) * Math.min(Core.graphics.getDeltaTime() * 60, 3) : 1;
 						//totalDamage += (b.getBulletType().damage + (b.getBulletType().splashDamage * Math.max(1, b.getBulletType().splashDamageRadius / 4))) * extraDamage;
 						counted += 1;
 						//fade /= 1.5;
@@ -463,7 +463,7 @@ const ravagerMain = prov(() => {
 				//if(totalDamage < 2) return;
 				
 				Vars.bulletGroup.intersect(this.x - rangeD, this.y - rangeD, rangeD * 2, rangeD * 2, cons(b => {
-					if(Mathf.within(this.x, this.y, b.x, b.y, rangeD) && b.getBulletType() != null && b.getTeam() != this.getTeam() && !(b instanceof Lightning)){
+					if(Mathf.within(this.x, this.y, b.x, b.y, rangeD) && b.getBulletType() != null && b.team != this.getTeam() && !(b instanceof Lightning)){
 						var piercing = b.getBulletType().pierce ? 60 : 1;
 						var tmpDamage = b.getBulletType().damage + b.getBulletType().splashDamage * piercing;
 						var currentBType = b.getBulletType();
@@ -490,7 +490,7 @@ const ravagerMain = prov(() => {
 							b.deflect();
 							if(counted >= 2) counted -= 1;
 							
-							Effects.effect(pointDefenceLaser, this.x, this.y, 0, [this, new Vec2(b.x, b.y)]);
+							Effect.effect(pointDefenceLaser, this.x, this.y, 0, [this, new Vec2(b.x, b.y)]);
 						}
 					}
 				}));
@@ -515,7 +515,7 @@ const ravagerMain = prov(() => {
 						
 						//var to = Predict.intercept(this, this.getTargets()[i], this.getIndexBullet()[group].speed);
 						var to = lib.predictAlt(this, tempVec2, this.getTargets()[i], this.getIndexBullet()[group].speed, false);
-						//Effects.effect(predictParticle, to.x, to.y);
+						//Effect.effect(predictParticle, to.x, to.y);
 						var targetAngle = Angles.angle(tempVec.x, tempVec.y, to.x, to.y);
 						
 						this.getWeapAngle()[group] = Angles.moveToward(this.getWeapAngle()[group], targetAngle, 4.6);
@@ -652,27 +652,27 @@ const ravagerMain = prov(() => {
 const nightmareBulletAC = extend(BasicBulletType, {
 	update(b){
 		if(b.timer.get(1, 35)){
-			var vec = lib.collideLineHealth(b, b.x, b.y, b.rot(), this.maxLaserRange, 14000, true);
+			var vec = lib.collideLineHealth(b, b.x, b.y, b.vel.angle(), this.maxLaserRange, 14000, true);
 			if(vec instanceof Vec2){
 				b.setData(vec.cpy());
 			}else{
-				tempVec.trns(b.rot(), this.maxLaserRange);
+				tempVec.trns(b.vel.angle(), this.maxLaserRange);
 				tempVec.add(b.x, b.y);
 				b.setData(tempVec.cpy());
 			};
 			if(b.getData() == null && !(b.getData() instanceof Vec2)) return;
 			var lenA = Mathf.dst(b.getData().x, b.getData().y, b.x, b.y);
 			//print(vec);
-			Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), lenA, true);
+			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), lenA, true);
 			
-			tempVec.trns(b.rot(), lenA);
+			tempVec.trns(b.vel.angle(), lenA);
 			tempVec.add(b.x, b.y);
 			this.hitB(b, tempVec.x, tempVec.y);
 		};
 	},
 	hitB(b, x, y){
 		const rangeC = 53 * 1.15;
-		Units.nearbyEnemies(b.getTeam(), x - rangeC, y - rangeC, rangeC * 2, rangeC * 2, cons(e => {
+		Units.nearbyEnemies(b.team, x - rangeC, y - rangeC, rangeC * 2, rangeC * 2, cons(e => {
 			if(Mathf.within(e.x, e.y, x, y, rangeC + (e.getSize() / 2))){
 				var dstA = ((rangeC + (e.getSize() / 2)) - Mathf.dst(e.x, e.y, x, y)) / rangeC;
 				var extra = e.maxHealth() < 8000 ? 0 : (e.maxHealth() - 8000) * 1.3;
@@ -697,7 +697,7 @@ const nightmareBulletAC = extend(BasicBulletType, {
 				var zy = ((ty * Vars.tilesize) + offset) + y;
 				tileA = Vars.world.ltileWorld(zx, zy);
 				if(indexed.lastIndexOf(tileA) != -1) continue tileYLoop;
-				if(tileA != null && tileA.ent() != null && !tileA.ent().isDead() && tileA.getTeam() != b.getTeam()){
+				if(tileA != null && tileA.ent() != null && !tileA.ent().isDead() && tileA.getTeam() != b.team){
 					//var dstA = ((rangeC + (e.getSize() / 2)) - Mathf.dst(e.x, e.y, x, y)) / rangeC;
 					var dstA = (rangeC - Mathf.dst(tileA.drawx(), tileA.drawy(), x, y)) / rangeC;
 					var extra = tileA.ent().maxHealth() < 8000 ? 0 : tileA.ent().maxHealth() - 8000;
@@ -732,32 +732,32 @@ const nightmareBulletAC = extend(BasicBulletType, {
 		const lenscales = [1.0, 1.12, 1.15, 1.164];
 		//const tmpColor = new Color();
 		//var f = Mathf.curve(b.fin(), 0.0, 0.17);
-		//var e = Interpolation.pow2InInverse.apply(Mathf.curve(b.fin(), 0.0, 0.56));
-		var e = Interpolation.pow2InInverse.apply(Mathf.curve(b.fin(), 0.0, 0.76));
+		//var e = Interp.pow2InInverse.apply(Mathf.curve(b.fin(), 0.0, 0.56));
+		var e = Interp.pow2InInverse.apply(Mathf.curve(b.fin(), 0.0, 0.76));
 		//var baseLen = len * f;
 		
 		for(var s = 0; s < 4; s++){
 			Draw.color(colors[s]);
 			for(var i = 0; i < 4; i++){
-				Tmp.v1.trns(b.rot() + 180.0, (lenscales[i] - 0.9) * 62.0);
-				Tmp.v2.trns(b.rot(), len);
-				//Tmp.v2.trns(b.rot(), (lenscales[i] - 0.5) * 68.0);
+				Tmp.v1.trns(b.vel.angle() + 180.0, (lenscales[i] - 0.9) * 62.0);
+				Tmp.v2.trns(b.vel.angle(), len);
+				//Tmp.v2.trns(b.vel.angle(), (lenscales[i] - 0.5) * 68.0);
 				Lines.stroke(9 * b.fout() * strokes[s] * tscales[i]);
-				Lines.line(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.x + Tmp.v2.x, b.y + Tmp.v2.y, CapStyle.none);
-				//Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.rot(), baseLen + ((lenscales[i] - 0.5) * (62.0 * 2)), CapStyle.none);
+				Lines.line(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.x + Tmp.v2.x, b.y + Tmp.v2.y, false);
+				//Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.vel.angle(), baseLen + ((lenscales[i] - 0.5) * (62.0 * 2)), false);
 				//Fill.circle(b.getData().x, b.getData().y, b.fslope() * 67 * strokes[s]);
 			};
-			Tmp.v1.trns(b.rot(), len);
+			Tmp.v1.trns(b.vel.angle(), len);
 			//(0.5 - Math.abs(f - 0.5)) * 2;
 			Fill.circle(Tmp.v1.x + b.x, Tmp.v1.y + b.y, ((0.5 - Math.abs(e - 0.5)) * 2) * 53 * strokesAlt[s]);
 		};
 
 		/*for(var s = 0; s < 4; s++){
-			Draw.color(tmpColor.set(colors[s]).mul(1.0 + Mathf.absin(Time.time(), 1.2, 0.4)));
+			Draw.color(tmpColor.set(colors[s]).mul(1.0 + Mathf.absin(Time.time, 1.2, 0.4)));
 			for(var i = 0; i < 4; i++){
-				Tmp.v1.trns(b.rot() + 180.0, (lenscales[i] - 0.9) * 55.0);
-				Lines.stroke((9 + Mathf.absin(Time.time(), 1.7, 3.1)) * b.fout() * strokes[s] * tscales[i]);
-				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.rot(), this.maxLaserRange * b.fout() * lenscales[i], CapStyle.none);
+				Tmp.v1.trns(b.vel.angle() + 180.0, (lenscales[i] - 0.9) * 55.0);
+				Lines.stroke((9 + Mathf.absin(Time.time, 1.7, 3.1)) * b.fout() * strokes[s] * tscales[i]);
+				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.vel.angle(), this.maxLaserRange * b.fout() * lenscales[i], false);
 			}
 		};*/
 		Draw.reset();
@@ -780,13 +780,13 @@ const tempRect = new Rect();
 
 const nightmareFlakBullet = extend(FlakBulletType, {
 	hitA(b, x, y){
-		Effects.effect(this.hitEffect, x, y, b.rot());
+		Effect.effect(this.hitEffect, x, y, b.vel.angle());
 		this.hitSound.at(b);
 
-		Effects.shake(this.hitShake, this.hitShake, b);
+		Effect.shake(this.hitShake, this.hitShake, b);
 
 		if(this.splashDamageRadius > 0){
-			Damage.damage(b.getTeam(), x, y, this.splashDamageRadius, this.splashDamage * b.damageMultiplier());
+			Damage.damage(b.team, x, y, this.splashDamageRadius, this.splashDamage * b.damageMultiplier());
 		};
 	},
 	hit(b){
@@ -795,8 +795,8 @@ const nightmareFlakBullet = extend(FlakBulletType, {
 		this.hitA(b, b.x, b.y);
 		
 		b.hitbox(tempRect);
-		Units.nearbyEnemies(b.getTeam(), tempRect.x, tempRect.y, tempRect.width, tempRect.height, cons(unit => {
-			if(unit.getTeam() != b.getTeam()){
+		Units.nearbyEnemies(b.team, tempRect.x, tempRect.y, tempRect.width, tempRect.height, cons(unit => {
+			if(unit.getTeam() != b.team){
 				var lastHealthC = unit.health();
 				
 				//print(lastHealthC);

@@ -58,19 +58,19 @@ const railExplosive = extend(BasicBulletType, {
 		b.scaleTime(this.speedDamage / 4);
 		
 		if(b.getData() == null){
-			Damage.damage(b.getTeam(), x, y, this.firstHitRadius, this.firstHitDamage * b.damageMultiplier());
-			Effects.effect(railFirstHit, this.effectColor, x, y, b.rot(), this.firstHitRadius);
+			Damage.damage(b.team, x, y, this.firstHitRadius, this.firstHitDamage * b.damageMultiplier());
+			Effect.effect(railFirstHit, this.effectColor, x, y, b.vel.angle(), this.firstHitRadius);
 			b.setData(0);
 		};
 	},
 	
 	update(b){
-		Effects.effect(railTrail, this.effectColor, b.x + Mathf.range(2), b.y + Mathf.range(2));
+		Effect.effect(railTrail, this.effectColor, b.x + Mathf.range(2), b.y + Mathf.range(2));
 		
 		var tile = Vars.world.ltileWorld(b.x, b.y);
 		
 		if(tile != null){
-			if(tile.entity != null && tile.getTeam() != b.getTeam()){
+			if(tile.entity != null && tile.getTeam() != b.team){
 				tile.entity.damage(this.damage);
 				this.hit(b, b.x, b.y);
 			}
@@ -104,19 +104,19 @@ const railThorium = extend(BasicBulletType, {
 		b.scaleTime(this.speedDamage / 4);
 		
 		if(b.getData() == null){
-			Damage.damage(b.getTeam(), x, y, this.firstHitRadius, this.firstHitDamage * b.damageMultiplier());
-			Effects.effect(railFirstHit, this.effectColor, x, y, b.rot(), this.firstHitRadius);
+			Damage.damage(b.team, x, y, this.firstHitRadius, this.firstHitDamage * b.damageMultiplier());
+			Effect.effect(railFirstHit, this.effectColor, x, y, b.vel.angle(), this.firstHitRadius);
 			b.setData(0);
 		};
 	},
 	
 	update(b){
-		Effects.effect(railTrail, this.effectColor, b.x + Mathf.range(2), b.y + Mathf.range(2));
+		Effect.effect(railTrail, this.effectColor, b.x + Mathf.range(2), b.y + Mathf.range(2));
 		
 		var tile = Vars.world.ltileWorld(b.x, b.y);
 		
 		if(tile != null){
-			if(tile.entity != null && tile.getTeam() != b.getTeam()){
+			if(tile.entity != null && tile.getTeam() != b.team){
 				tile.entity.damage(this.damage);
 				this.hit(b, b.x, b.y);
 			}
@@ -149,19 +149,19 @@ const railPlastic = extend(BasicBulletType, {
 		b.scaleTime(this.speedDamage / 4);
 		
 		if(b.getData() == null){
-			Damage.damage(b.getTeam(), x, y, this.firstHitRadius, this.firstHitDamage * b.damageMultiplier());
-			Effects.effect(railFirstHit, this.effectColor, x, y, b.rot(), this.firstHitRadius);
+			Damage.damage(b.team, x, y, this.firstHitRadius, this.firstHitDamage * b.damageMultiplier());
+			Effect.effect(railFirstHit, this.effectColor, x, y, b.vel.angle(), this.firstHitRadius);
 			b.setData(0);
 		};
 	},
 	
 	update(b){
-		Effects.effect(railTrail, this.effectColor, b.x + Mathf.range(2), b.y + Mathf.range(2));
+		Effect.effect(railTrail, this.effectColor, b.x + Mathf.range(2), b.y + Mathf.range(2));
 		
 		var tile = Vars.world.ltileWorld(b.x, b.y);
 		
 		if(tile != null){
-			if(tile.entity != null && tile.getTeam() != b.getTeam()){
+			if(tile.entity != null && tile.getTeam() != b.team){
 				tile.entity.damage(this.damage);
 				this.hit(b, b.x, b.y);
 			}

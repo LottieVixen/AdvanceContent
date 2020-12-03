@@ -35,23 +35,23 @@ const stormBullet = extend(BasicBulletType, {
 		const trnsD = new Vec2();
 		
 		if(Mathf.chance(0.9)){
-			Effects.effect(stormSmoke, this.backColor, b.x + Mathf.range(2.0), b.y + Mathf.range(2.0), b.rot());
+			Effect.effect(stormSmoke, this.backColor, b.x + Mathf.range(2.0), b.y + Mathf.range(2.0), b.vel.angle());
 		};
 
-		if(Mathf.chance(Time.delta() * 0.7)){
-			trnsC.trns(b.rot() + Mathf.range(2.0), 13);
-			Lightning.create(b.getTeam(), Color.valueOf("a9d8ff"), 31, b.x + trnsC.x + Mathf.range(12.0), b.y + trnsC.y + Mathf.range(12.0), b.rot() + Mathf.range(56.0), Mathf.random(4, 22));
+		if(Mathf.chance(Math.min(Core.graphics.getDeltaTime() * 60, 3) * 0.7)){
+			trnsC.trns(b.vel.angle() + Mathf.range(2.0), 13);
+			Lightning.create(b.team, Color.valueOf("a9d8ff"), 31, b.x + trnsC.x + Mathf.range(12.0), b.y + trnsC.y + Mathf.range(12.0), b.vel.angle() + Mathf.range(56.0), Mathf.random(4, 22));
 		};
-		if(Mathf.chance(Time.delta() * 0.3)){
-			trnsD.trns(b.rot() + Mathf.range(2.0), 13);
-			Lightning.create(b.getTeam(), Color.valueOf("8494b3"), 17, b.x + trnsD.x + Mathf.range(12.0), b.y + trnsD.y + Mathf.range(12.0), b.rot() + Mathf.range(180.0), Mathf.random(3, 12));
+		if(Mathf.chance(Math.min(Core.graphics.getDeltaTime() * 60, 3) * 0.3)){
+			trnsD.trns(b.vel.angle() + Mathf.range(2.0), 13);
+			Lightning.create(b.team, Color.valueOf("8494b3"), 17, b.x + trnsD.x + Mathf.range(12.0), b.y + trnsD.y + Mathf.range(12.0), b.vel.angle() + Mathf.range(180.0), Mathf.random(3, 12));
 		};
-		Effects.effect(stormSmokeTwo, this.backColor, b.x + Mathf.range(12.9), b.y + Mathf.range(12.9), b.rot() + Mathf.range(2.0));
+		Effect.effect(stormSmokeTwo, this.backColor, b.x + Mathf.range(12.9), b.y + Mathf.range(12.9), b.vel.angle() + Mathf.range(2.0));
 	},
 	
 	draw: function(b){
 		Draw.color(Color.valueOf("6c8fc7"), Color.valueOf("606571"), b.fin());
-		Fill.poly(b.x, b.y, 6, 6 + b.fout() * 6.1, b.rot());
+		Fill.poly(b.x, b.y, 6, 6 + b.fout() * 6.1, b.vel.angle());
 		Draw.reset();
 	}
 });

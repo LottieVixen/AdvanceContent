@@ -29,7 +29,7 @@ const pestilenceWeap = extendContent(Weapon, "pestilence-equip", {
 			newUnit.applyEffect(status, Number.MAX_VALUE);
 			vec.trns(angle, 2);
 			newUnit.velocity().set(vec);
-			Effects.effect(summonEffect, p.getX() + x, p.getY() + y);
+			Effect.effect(summonEffect, p.getX() + x, p.getY() + y);
 			Sounds.missile.at(p.getX() + x, p.getY() + y, Mathf.random(0.8, 1.0));
 		}
 	}

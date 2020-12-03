@@ -39,17 +39,17 @@ const fahrSmoke = newEffect(13, e => {
 const fahrBullet = extend(BasicBulletType, {
 	update: function(b){
 		if(b.timer.get(0, 1 + b.fslope() * 0.5)){
-			Effects.effect(this.trailEffect, this.backColor, b.x + Mathf.range(0.9), b.y + Mathf.range(0.9), b.rot());
+			Effect.effect(this.trailEffect, this.backColor, b.x + Mathf.range(0.9), b.y + Mathf.range(0.9), b.vel.angle());
 		};
 		
 		if(Mathf.chance(0.7)){
-			Effects.effect(fahrSmoke, this.backColor, b.x + Mathf.range(2.0), b.y + Mathf.range(2.0), b.rot());
+			Effect.effect(fahrSmoke, this.backColor, b.x + Mathf.range(2.0), b.y + Mathf.range(2.0), b.vel.angle());
 		}
 	},
 	
 	draw: function(b){
 		Draw.color(Color.valueOf("a9d8ff"), Color.valueOf("4f72e1"), b.fin());
-		Fill.poly(b.x, b.y, 6, 3 + b.fin() * 4.1, b.rot() + b.fin() * 270);
+		Fill.poly(b.x, b.y, 6, 3 + b.fin() * 4.1, b.vel.angle() + b.fin() * 270);
 		Draw.reset();
 	}
 });
@@ -69,7 +69,7 @@ fahrBullet.collidesTiles = true;
 fahrBullet.collidesAir = true;
 fahrBullet.pierce = true;
 fahrBullet.statusDuration = 570;
-fahrBullet.status = StatusEffects.burning;
+fahrBullet.status = StatusEffect.burning;
 fahrBullet.frontColor = Color.valueOf("ffffff");
 fahrBullet.backColor = Color.valueOf("a9d8ff");
 

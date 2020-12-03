@@ -1,6 +1,6 @@
 const rbHitEffect = newEffect(12, e => {
 	Draw.blend(Blending.additive);
-	Draw.color(Color.valueOf("ff0000ff").shiftHue(Time.time() * 4.0));
+	Draw.color(Color.valueOf("ff0000ff").shiftHue(Time.time * 4.0));
 	Lines.stroke(e.fout() * 1.5);
 	
 	const hl = new Floatc2({get: function(x, y){
@@ -17,7 +17,7 @@ const rainbowLaserEffect = newEffect(25, e => {
 	const trnsE = new Vec2();
 	
 	trnsE.trns(e.rotation, e.fin() * 70);
-	Draw.color(Color.valueOf("ff5555ff").shiftHue(Time.time() * 2.0), Color.valueOf("ff000000").shiftHue(Time.time() * 2.0), e.fin());
+	Draw.color(Color.valueOf("ff5555ff").shiftHue(Time.time * 2.0), Color.valueOf("ff000000").shiftHue(Time.time * 2.0), e.fin());
 	//Fill.poly(e.x, e.y, 4, e.fout() * 17, e.rotation);
 	Fill.poly(e.x + trnsE.x, e.y + trnsE.y, 4, e.fout() * 6, e.rotation);
 });
@@ -28,14 +28,14 @@ const rainbowLaser = extend(BasicBulletType, {
 		const trnsB = new Vec2();
 		const trnsC = new Vec2();
 		
-		Effects.shake(0.8, 0.8, b.x, b.y);
+		Effect.shake(0.8, 0.8, b.x, b.y);
 		if(b.timer.get(1, 5)){
-			Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), 245.0, true);
+			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), 245.0, true);
 		};
 		if(Mathf.chance(0.9)){
-			trnsB.trns(b.rot(), Mathf.random(0.5, 240.0), Mathf.range(7.0));
-			//trnsC.trns(b.rot() + 90, Mathf.range(7.0));
-			Effects.effect(rainbowLaserEffect, b.x + trnsB.x, b.y + trnsB.y, b.rot());
+			trnsB.trns(b.vel.angle(), Mathf.random(0.5, 240.0), Mathf.range(7.0));
+			//trnsC.trns(b.vel.angle() + 90, Mathf.range(7.0));
+			Effect.effect(rainbowLaserEffect, b.x + trnsB.x, b.y + trnsB.y, b.vel.angle());
 		}
 	},
 	
@@ -49,11 +49,11 @@ const rainbowLaser = extend(BasicBulletType, {
 
 		for(var s = 0; s < 4; s++){
 			
-			Draw.color(tmpColor.set(colors[s]).shiftHue((s * 45) + (Time.time() * 2.0)));
+			Draw.color(tmpColor.set(colors[s]).shiftHue((s * 45) + (Time.time * 2.0)));
 			for(var i = 0; i < 4; i++){
-				Tmp.v1.trns(b.rot() + 180.0, (lenscales[i] - 1.0) * 20.0);
-				Lines.stroke((9 + Mathf.absin(Time.time() + (15 * s), 1.9, 1.8)) * b.fout() * strokes[s] * tscales[i]);
-				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.rot(), 230.0 * b.fout() * lenscales[i], CapStyle.none);
+				Tmp.v1.trns(b.vel.angle() + 180.0, (lenscales[i] - 1.0) * 20.0);
+				Lines.stroke((9 + Mathf.absin(Time.time + (15 * s), 1.9, 1.8)) * b.fout() * strokes[s] * tscales[i]);
+				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.vel.angle(), 230.0 * b.fout() * lenscales[i], false);
 			}
 		};
 		Draw.reset();
@@ -89,7 +89,7 @@ const rainbow = extendContent(LaserTurret, "rainbow-road",{
 
 		Draw.rect(this.region, tile.drawx() + tr2.x, tile.drawy() + tr2.y, entity.rotation - 90);
 
-		Draw.color(Color.valueOf("ff0000").shiftHue(Time.time() * 2.0));
+		Draw.color(Color.valueOf("ff0000").shiftHue(Time.time * 2.0));
 		Draw.rect(this.rainbowRegion, tile.drawx() + tr2.x, tile.drawy() + tr2.y, entity.rotation - 90);
 		Draw.color();
 	}

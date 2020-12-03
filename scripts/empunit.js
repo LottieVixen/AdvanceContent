@@ -31,18 +31,18 @@ const empEffectBullet = extend(BasicBulletType, {
 	update(b){
 		if(b.getData() != null && !b.getData().isDead()){
 			var entity = b.getData();
-			if(Mathf.chance(0.7 * Time.delta())){
+			if(Mathf.chance(0.7 * Math.min(Core.graphics.getDeltaTime() * 60, 3))){
 				entity.productionEfficiency = 0;
 				entity.generateTime = 0;
 				entity.power.status = 0;
 			};
 			
-			if(Mathf.chance(0.125 * Time.delta())){
+			if(Mathf.chance(0.125 * Math.min(Core.graphics.getDeltaTime() * 60, 3))){
 				entity.cons.trigger();
 			};
 			
-			if(Mathf.chance(0.3 * Time.delta())){
-				Effects.effect(empEffect, entity.x + Mathf.range(entity.block.size * Vars.tilesize / 2), entity.y + Mathf.range(entity.block.size * Vars.tilesize / 2));
+			if(Mathf.chance(0.3 * Math.min(Core.graphics.getDeltaTime() * 60, 3))){
+				Effect.effect(empEffect, entity.x + Mathf.range(entity.block.size * Vars.tilesize / 2), entity.y + Mathf.range(entity.block.size * Vars.tilesize / 2));
 			};
 		}
 	},
@@ -60,14 +60,14 @@ empEffectBullet.collides = false;
 
 const empUnitBullet = extend(BasicBulletType, {
 	hit(b){
-		Effects.effect(this.hitEffect, b.x, b.y, b.rot());
+		Effect.effect(this.hitEffect, b.x, b.y, b.vel.angle());
 		this.hitSound.at(b);
 		
-		Effects.effect(empHit, b.x, b.y, b.rot());
+		Effect.effect(empHit, b.x, b.y, b.vel.angle());
 			
 		var range = 110;
 		
-		/*var tile = Units.findEnemyTile(b.getTeam(), b.x, b.y, range, boolf(t => t.block() instanceof PowerBlock));
+		/*var tile = Units.findEnemyTile(b.team, b.x, b.y, range, boolf(t => t.block() instanceof PowerBlock));
 		if(tile != null){
 			//var entity = tile.ent();
 			
@@ -82,7 +82,7 @@ const empUnitBullet = extend(BasicBulletType, {
 		var array = [];
 		
 		for(var i = 0; i < 20; i++){
-			var tileB = Units.findEnemyTile(b.getTeam(), b.x, b.y, range, boolf(t => t.block() instanceof PowerBlock && array.lastIndexOf(t.ent().getID()) == -1));
+			var tileB = Units.findEnemyTile(b.team, b.x, b.y, range, boolf(t => t.block() instanceof PowerBlock && array.lastIndexOf(t.ent().getID()) == -1));
 			if(tileB == null) break;
 			
 			var powerGraph = tileB.power.graph;
@@ -108,7 +108,7 @@ const empUnitBullet = extend(BasicBulletType, {
 				
 				tileB.damage(1);
 				
-				Bullet.create(empEffectBullet, b.getOwner(), b.getTeam(), tileB.x, tileB.y, 0, 1, 1, tileB);
+				Bullet.create(empEffectBullet, b.getOwner(), b.team, tileB.x, tileB.y, 0, 1, 1, tileB);
 			};
 			
 			if(tileB.block instanceof PowerNode) this.clearPowerNode(tileB);
@@ -117,7 +117,7 @@ const empUnitBullet = extend(BasicBulletType, {
 			//print(tileB + "|tile entity");
 			//var entityB = tileB.ent();
 			
-			Effects.effect(empBlockDamage, tileB.x, tileB.y, blockB.size);
+			Effect.effect(empBlockDamage, tileB.x, tileB.y, blockB.size);
 			
 			tileB.damage(1);
 			

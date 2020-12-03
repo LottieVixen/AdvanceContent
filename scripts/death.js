@@ -1,20 +1,20 @@
 const deathFragBullet = extend(BasicBulletType, {
 	despawned(b){
-		Effects.effect(this.despawnEffect, b.x, b.y, b.rot());
+		Effect.effect(this.despawnEffect, b.x, b.y, b.vel.angle());
 		this.hitSound.at(b);
 		
-		Damage.damage(b.getTeam(), b.x, b.y, 20, 12 * b.damageMultiplier());
+		Damage.damage(b.team, b.x, b.y, 20, 12 * b.damageMultiplier());
 	},
 	
 	update(b){
-		var target = Units.closestTarget(b.getTeam(), b.x, b.y, this.homingRange, boolf(e => !e.isFlying() || this.collidesAir), boolf(t => false));
+		var target = Units.closestTarget(b.team, b.x, b.y, this.homingRange, boolf(e => !e.isFlying() || this.collidesAir), boolf(t => false));
 		
 		if(target != null){
 			b.velocity().setAngle(Mathf.slerpDelta(b.velocity().angle(), b.angleTo(target), 0.03 + (0.14 * b.fin())));
 		};
 		
-		if(Mathf.chance(Time.delta() * 0.2)){
-			Effects.effect(Fx.missileTrail, Pal.unitBack, b.x, b.y, 1.7);
+		if(Mathf.chance(Math.min(Core.graphics.getDeltaTime() * 60, 3) * 0.2)){
+			Effect.effect(Fx.missileTrail, Pal.unitBack, b.x, b.y, 1.7);
 		}
 	}
 });
@@ -36,10 +36,10 @@ const deathBullet = extend(BasicBulletType, {
 	update(b){
 		this.super$update(b);
 		
-		b.velocity().rotate(Mathf.sin(Time.time() + (b.id * 4422), 9, 3) * Time.delta());
+		b.velocity().rotate(Mathf.sin(Time.time + (b.id * 4422), 9, 3) * Math.min(Core.graphics.getDeltaTime() * 60, 3));
 		
-		if(Mathf.chance(Time.delta() * 0.2)){
-			Effects.effect(Fx.missileTrail, Pal.unitBack, b.x, b.y, 2.2);
+		if(Mathf.chance(Math.min(Core.graphics.getDeltaTime() * 60, 3) * 0.2)){
+			Effect.effect(Fx.missileTrail, Pal.unitBack, b.x, b.y, 2.2);
 		}
 	}
 });

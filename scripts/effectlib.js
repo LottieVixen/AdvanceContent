@@ -1,9 +1,9 @@
 module.exports = {
 	newEffectWDraw(lifetime, drawDst, renderer){
-		return new Effects.Effect(lifetime, drawDst, new Effects.EffectRenderer({render: renderer}));
+		return new Effect.Effect(lifetime, drawDst, new Effect.EffectRenderer({render: renderer}));
 	},
 	
 	newGroundEffect(lifetime, staticLife, renderer){
-		return new GroundEffectEntity.GroundEffect(lifetime, staticLife, new Effects.EffectRenderer({render: renderer}));
+		return new GroundEffectEntity.GroundEffect(lifetime, staticLife, new Effect.EffectRenderer({render: renderer}));
 	}
 }

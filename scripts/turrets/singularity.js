@@ -14,8 +14,8 @@ const despawnedBullet = newEffect(12, e => {
 });
 
 const attractBlock = elib.newEffectWDraw(23, 180, e => {
-	var interpC = Interpolation.pow3In.apply(e.fin());
-	var sizeB = 1 - Interpolation.pow5In.apply(e.fin());
+	var interpC = Interp.pow3In.apply(e.fin());
+	var sizeB = 1 - Interp.pow5In.apply(e.fin());
 	const region = e.data[0];
 	var dx = e.data[1];
 	var dy = e.data[2];
@@ -36,7 +36,7 @@ const whirl = newEffect(65, e => {
 	const vec = new Vec2();
 	for(var i = 0; i < 2; i++){
 		var h = i * 2;
-		var rand1 = Interpolation.exp5In.apply((Mathf.randomSeedRange(e.id + h, 1) + 1) / 2);
+		var rand1 = Interp.exp5In.apply((Mathf.randomSeedRange(e.id + h, 1) + 1) / 2);
 		var rand2 = (Mathf.randomSeedRange(e.id * 2 + h, 360) + 360) / 2;
 		var rand3 = (Mathf.randomSeedRange(e.id * 4 + h, 5) + 5) / 2;
 		var angle = rand2 + ((180 + rand3) * e.fin());
@@ -61,23 +61,23 @@ const singularityTrail = newEffect(55, e => {
 
 const singularityBulletEffect = extend(BasicBulletType, {
 	update: function(b){
-		var interp = this.strength * Interpolation.exp10Out.apply(b.fin());
-		var interpB = Interpolation.exp10Out.apply(b.fin());
+		var interp = this.strength * Interp.exp10Out.apply(b.fin());
+		var interpB = Interp.exp10Out.apply(b.fin());
 		const vec = new Vec2();
 		const vec2 = new Vec2();
 		const tileDamage = 150;
 		
-		/*if(Mathf.chance(Time.delta() * (0.5 * interp))){
-			Effects.effect(whirl, b.x, b.y);
+		/*if(Mathf.chance(Math.min(Core.graphics.getDeltaTime() * 60, 3) * (0.5 * interp))){
+			Effect.effect(whirl, b.x, b.y);
 		};*/
 		
-		Effects.shake(interpB, interpB, b.x, b.y);
+		Effect.shake(interpB, interpB, b.x, b.y);
 		
 		var array = [];
 		
 		if(b.timer.get(1, 7)){
 			for(var s = 0; s < 16; s++){
-				tileB = Units.findEnemyTile(b.getTeam(), b.x, b.y, this.rangeB, boolf(tile => array.lastIndexOf(tile.ent().getID()) == -1 && !tile.ent().isDead() && Mathf.randomBoolean())); //random boolean to reduce lag and loop size.
+				tileB = Units.findEnemyTile(b.team, b.x, b.y, this.rangeB, boolf(tile => array.lastIndexOf(tile.ent().getID()) == -1 && !tile.ent().isDead() && Mathf.randomBoolean())); //random boolean to reduce lag and loop size.
 				if(tileB == null) break;
 				
 				dstB = Math.abs((Mathf.dst(b.x, b.y, tileB.x, tileB.y) / this.rangeB) - 1);
@@ -86,7 +86,7 @@ const singularityBulletEffect = extend(BasicBulletType, {
 					tileB.kill();
 					if(!Vars.headless){
 						var data = [Core.atlas.find(tileB.block.name), tileB.x, tileB.y];
-						Effects.effect(attractBlock, b.x, b.y, tileB.tile.rotation(), data);
+						Effect.effect(attractBlock, b.x, b.y, tileB.tile.rotation(), data);
 					}
 				};
 				
@@ -95,13 +95,13 @@ const singularityBulletEffect = extend(BasicBulletType, {
 			}
 		};
 		
-		Units.nearbyEnemies(b.getTeam(), b.x - this.rangeB, b.y - this.rangeB, this.rangeB * 2, this.rangeB * 2, cons(u => {
+		Units.nearbyEnemies(b.team, b.x - this.rangeB, b.y - this.rangeB, this.rangeB * 2, this.rangeB * 2, cons(u => {
 			if(u != null && Mathf.within(b.x, b.y, u.x, u.y, this.rangeB)){
 				if(u instanceof SolidEntity){
 					var hitSizeB = 0;
 					if(u instanceof BaseUnit) hitSizeB = u.getType().hitsize / 2;
 					if(u instanceof Player) hitSizeB = u.mech.hitsize / 2;
-					//var interp = this.strength * Interpolation.exp10Out.apply(b.fin());
+					//var interp = this.strength * Interp.exp10Out.apply(b.fin());
 					var dst = Math.abs((Mathf.dst(b.x, b.y, u.x, u.y) / this.rangeB) - 1) * interp;
 					var ang = Angles.angle(u.x, u.y, b.x, b.y);
 					
@@ -116,7 +116,7 @@ const singularityBulletEffect = extend(BasicBulletType, {
 					
 					u.moveBy(vec.x, vec.y);
 					
-					//var interpB = Interpolation.exp10Out.apply(b.fin());
+					//var interpB = Interp.exp10Out.apply(b.fin());
 					
 					if(Mathf.within(b.x, b.y, u.x, u.y, (interpB * bulletSize * 3.9) + hitSizeB) && u instanceof HealthTrait){
 						u.damage(120);
@@ -124,14 +124,14 @@ const singularityBulletEffect = extend(BasicBulletType, {
 					
 					//var data = [b, u, interp];
 					
-					//Effects.effect(laserEffect, b.x, b.y, 0, data);
+					//Effect.effect(laserEffect, b.x, b.y, 0, data);
 				}
 			}
 		}));
 	},
 	
 	draw: function(b){
-		var interp = Interpolation.exp10Out.apply(b.fin());
+		var interp = Interp.exp10Out.apply(b.fin());
 		
 		const scales = [8.6, 7, 5.5, 4.3, 4.1, 3.9];
 		const colors = [Color.valueOf("4787ff80"), Color.valueOf("a9d8ff"), Color.valueOf("ffffff"), Color.valueOf("a9d8ff"), Color.valueOf("4787ff"), Color.valueOf("000000")];
@@ -161,19 +161,19 @@ const singularityBullet = extend(BasicBulletType, {
 	update: function(b){
 		const vec = new Vec2();
 		
-		if(Units.closestTarget(b.getTeam(), b.x, b.y, 20) != null){
+		if(Units.closestTarget(b.team, b.x, b.y, 20) != null){
 			b.time(this.lifetime + 1);
 		};
 		
 		if(b.timer.get(0, 2 + b.fslope() * 1.5)){
-			Effects.effect(singularityTrail, this.backColor, b.x, b.y, 1 + (b.fslope() * 4));
+			Effect.effect(singularityTrail, this.backColor, b.x, b.y, 1 + (b.fslope() * 4));
 		};
 	},
 	
 	despawned(b){
 		this.super$despawned(b);
 		
-		Bullet.create(singularityBulletEffect, b, b.x, b.y, b.rot());
+		Bullet.create(singularityBulletEffect, b, b.x, b.y, b.vel.angle());
 	},
 	
 	draw: function(b){

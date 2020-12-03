@@ -20,7 +20,7 @@ const disableEffect = elib.newEffectWDraw(21, 400, e => {
 	spritelib.blendingCustom(blendCustomA[0], blendCustomA[1]);
 	
 	Draw.color(Color.white);
-	Draw.alpha(Interpolation.exp10Out.apply(e.fout()));
+	Draw.alpha(Interp.exp10Out.apply(e.fout()));
 	
 	//Fill.circle(e.x, e.y, e.finpow() * 210);
 	Draw.rect(tex, e.x, e.y, e.finpow() * 210 * 2, e.finpow() * 210 * 2);
@@ -118,14 +118,14 @@ const altLeg = prov(() => {
 		},
 		stepEffectC(){
 			if(!this.getFloor().isLiquid){
-				Effects.effect(stepEffect, this.getFloor().color, this._targetPosition.x, this._targetPosition.y, this._effectSize);
+				Effect.effect(stepEffect, this.getFloor().color, this._targetPosition.x, this._targetPosition.y, this._effectSize);
 				Sounds.bang.at(this._targetPosition.x, this._targetPosition.y, Mathf.random(0.9, 1.1) * 0.5);
 			}else{
-				Effects.effect(stepRipple, this.getFloor().color, this._targetPosition.x, this._targetPosition.y, this._effectSize);
+				Effect.effect(stepRipple, this.getFloor().color, this._targetPosition.x, this._targetPosition.y, this._effectSize);
 				Sounds.splash.at(this._targetPosition.x, this._targetPosition.y, Mathf.random(0.9, 1.1) * 0.65);
 			};
 			if(this._effectSize / 26 > 0.1){
-				Effects.shake(this._effectSize / 26, this._effectSize / 26, this._targetPosition.x, this._targetPosition.y);
+				Effect.shake(this._effectSize / 26, this._effectSize / 26, this._targetPosition.x, this._targetPosition.y);
 			};
 		},
 		setProgress(){
@@ -173,8 +173,8 @@ const altLeg = prov(() => {
 			var trg = this._targetPosition;
 			var lst = this._lastPos;
 			var own = this._owner;
-			var tProg = Interpolation.pow2.apply(this._progress);
-			var fProg = Interpolation.pow4.apply(this._progress);
+			var tProg = Interp.pow2.apply(this._progress);
+			var fProg = Interp.pow4.apply(this._progress);
 			
 			var flip = Mathf.sign(this._flipped);
 			
@@ -242,8 +242,8 @@ const pandoraBullet = extend(BasicBulletType, {
 			b.time(this.lifetime);
 			return;
 		};
-		if(Mathf.chance(0.7 * Time.delta())){
-			Effects.effect(pandoraBulletTrail, b.x + Mathf.range(2.0), b.y + Mathf.range(2.0), b.rot());
+		if(Mathf.chance(0.7 * Math.min(Core.graphics.getDeltaTime() * 60, 3))){
+			Effect.effect(pandoraBulletTrail, b.x + Mathf.range(2.0), b.y + Mathf.range(2.0), b.vel.angle());
 		};
 		var momentum = Mathf.clamp(b.time() / 80);
 		b.velocity().setAngle(Mathf.slerpDelta(b.velocity().angle(), b.angleTo(b.getData().x, b.getData().y), 0.7 * (Mathf.clamp((670 - (b.dst(b.getData().x, b.getData().y) / 3)) / 670) + 0.02) * momentum));
@@ -266,7 +266,7 @@ const pandoraBullet = extend(BasicBulletType, {
 				tileA = Vars.world.ltileWorld(zx, zy);
 				if(indexed.lastIndexOf(tileA) != -1 || tileA == null) continue tileYLoop;
 				if(!tileA.within(b, rangeC)) continue tileYLoop;
-				if(tileA != null && tileA.ent() != null && !tileA.ent().isDead() && tileA.getTeam() != b.getTeam()){
+				if(tileA != null && tileA.ent() != null && !tileA.ent().isDead() && tileA.getTeam() != b.team){
 					if(blockLib.getOpBlocks().get(tileA.block()) >= 1){
 						tileA.ent().kill();
 					};
@@ -279,7 +279,7 @@ const pandoraBullet = extend(BasicBulletType, {
 	},
 	
 	despawned(b){
-		Effects.effect(this.despawnEffect, b.x, b.y, b.rot());
+		Effect.effect(this.despawnEffect, b.x, b.y, b.vel.angle());
 		this.hitSound.at(b);
 		
 		if(this.splashDamageRadius > 0){
@@ -344,11 +344,11 @@ const pandoraMain = prov(() => {
 			this.super$update();
 			this.updateLegs();
 			if(Units.invalidateTarget(this.target, this) && this.stuckTime < 10){
-				this._deathTime -= Time.delta();
+				this._deathTime -= Math.min(Core.graphics.getDeltaTime() * 60, 3);
 				this._deathTime = Math.max(this._deathTime, 0);
 			};
 			if(this.stuckTime > 10 && this.target != null){
-				this._deathTime += Time.delta();
+				this._deathTime += Math.min(Core.graphics.getDeltaTime() * 60, 3);
 			};
 			if(this._deathTime >= maxChargeTime){
 				this.explode();
@@ -356,7 +356,7 @@ const pandoraMain = prov(() => {
 			};
 		},
 		explode(){
-			Effects.effect(disableEffect, this.x, this.y);
+			Effect.effect(disableEffect, this.x, this.y);
 			
 			Damage.damage(this.getTeam(), this.x, this.y, 240, 390);
 			
@@ -397,7 +397,7 @@ const pandoraMain = prov(() => {
 					
 					this.rotate(this.angleTo(this.target));
 					
-					this._deathTime += Time.delta();
+					this._deathTime += Math.min(Core.graphics.getDeltaTime() * 60, 3);
 					
 					/*if(this._deathTime >= maxChargeTime){
 						this.explode();
@@ -427,7 +427,7 @@ const pandoraMain = prov(() => {
 			for(var m = 0; m < this._resetGroup[this._sequence].length; m++){
 				var groupA = this.getResetGroup()[this._sequence];
 				var wd = this.getLegs()[groupA[m]].isFlipped() ? 1 : -1;
-				var prog = this.stuckTime < 1 ? 0.035 * Time.delta() : 0;
+				var prog = this.stuckTime < 1 ? 0.035 * Math.min(Core.graphics.getDeltaTime() * 60, 3) : 0;
 				
 				tempVec.trns(this.baseRotation - 90, 123.5 * wd, this._legHeight[groupA[m]]);
 				tempVec.setLength(96.5);

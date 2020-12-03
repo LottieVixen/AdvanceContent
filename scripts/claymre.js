@@ -25,12 +25,12 @@ const claymoreLaser = extend(BasicBulletType, {
 	update: function(b){
 		const lengthC = (Mathf.clamp(b.velocity().len()) * 100) * 160;
 		if(b.timer.get(1, 17)){
-			Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), lengthC, false);
+			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), lengthC, false);
 		};
 	},
 	
 	/*init: function(b){
-		Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), 190.0);
+		Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), 190.0);
 	},*/
 	
 	draw: function(b){
@@ -48,15 +48,15 @@ const claymoreLaser = extend(BasicBulletType, {
 		const ownerY = b.getOwner().y;
 		const ownerVelocity = Mathf.clamp((b.getOwner().velocity().len() - 4.6) / (9.2 - 4.6));
 
-		//Lines.lineAngle(b.x, b.y, b.rot(), baseLen);
+		//Lines.lineAngle(b.x, b.y, b.vel.angle(), baseLen);
 		for(var s = 0; s < 3; s++){
 			//Draw.color(tmpColor.set(colors[s]).mul(1, 1, 1, alphaB * b.fout()));
 			//Draw.color(tmpColor.set(colors[s]).mul(1, 1, 1, alphaB * Mathf.sin(b.fin() * 3, 1, 1)));
 			Draw.color(tmpColor.set(colors[s]).mul(1, 1, 1, ownerVelocity * Mathf.sin(b.fin() * 3, 1, 1)));
 			for(var i = 0; i < 4; i++){
 				Lines.stroke(7 * b.fout() * (s == 0 ? 1.5 : s == 1 ? 1 : 0.3) * tscales[i]);
-				//vectB.trns(b.rot(), b.fin() * (alphaB * 120));
-				//vectC.trns(b.rot(), lengthC * lenscales[i]);
+				//vectB.trns(b.vel.angle(), b.fin() * (alphaB * 120));
+				//vectC.trns(b.vel.angle(), lengthC * lenscales[i]);
 				//vectC.trns(b.getOwner().velocity().angle(), lengthC * lenscales[i]);
 				vectC.trns(b.getOwner().velocity().angle(), (ownerVelocity * 160) * lenscales[i]);
 				//Lines.line(b.x + vectB.x, b.y + vectB.y, b.x + vectC.x, b.y + vectC.y);

@@ -112,7 +112,7 @@ const azathothBullet = extend(BasicBulletType, {
 		
 		//if(x == null || y == null) return;
 		
-		/*tileArray = Vars.indexer.getEnemy(b.getTeam(), BlockFlag.turret);
+		/*tileArray = Vars.indexer.getEnemy(b.team, BlockFlag.turret);
 		tileArray.each(cons(tileB => {
 			if(Mathf.within(tileB.worldx(), tileB.worldy(), b.x, b.y, this.disableRange) && tileB.ent() != null && !tileB.ent().isSleeping()){
 				entityB = tile.ent();
@@ -130,7 +130,7 @@ const azathothBullet = extend(BasicBulletType, {
 		for(var tx = -7; tx < 7; tx++){
 			for(var ty = -7; ty < 7; ty++){
 				var tileC = Vars.world.ltile(Mathf.round(b.x / Vars.tilesize) + tx, Mathf.round(b.y / Vars.tilesize) + ty);
-				if(tileC != null && tileC.ent() != null && tmpA.lastIndexOf(tileC) == -1 && tileC.getTeam() != b.getTeam()){
+				if(tileC != null && tileC.ent() != null && tmpA.lastIndexOf(tileC) == -1 && tileC.getTeam() != b.team){
 					entityC = tileC.ent();
 					//entityC.kill();
 					//entityC.onDeath();
@@ -269,15 +269,15 @@ const azathothMain = prov(() => {
 								};
 								//unit.getTimer().reset(3, 60);
 								//unit.getTimer().reset(4, 60);
-								//unit.getTimer().getTimes()[3] = Time.time() - 700;
-								//unit.getTimer().getTimes()[4] = Time.time() - 700;
+								//unit.getTimer().getTimes()[3] = Time.time - 700;
+								//unit.getTimer().getTimes()[4] = Time.time - 700;
 							}
 						};
 						if(unit instanceof Player){
 							const regions = Core.atlas.getRegions();
 							const regionsB = Core.atlas.getRegionMap();
 							
-							if(Mathf.chance(dst * 1.3 * Time.delta()) && effectID != null && effectID.data instanceof Array && effectID.data[0].length < 75){
+							if(Mathf.chance(dst * 1.3 * Math.min(Core.graphics.getDeltaTime() * 60, 3)) && effectID != null && effectID.data instanceof Array && effectID.data[0].length < 75){
 								var randX = Mathf.range(Core.graphics.getWidth() / 2) + Core.graphics.getWidth();
 								var randY = Mathf.range(Core.graphics.getHeight() / 2) + Core.graphics.getHeight();
 								var randXB = Mathf.random(Core.graphics.getWidth() / 3);
@@ -312,7 +312,7 @@ const azathothMain = prov(() => {
 								});
 								effectID.data[0].push(tmp);
 							};
-							if(Mathf.chance(dst * 0.3 * Time.delta()) && effectID != null && effectID.data instanceof Array && effectID.data[1].length < 20){
+							if(Mathf.chance(dst * 0.3 * Math.min(Core.graphics.getDeltaTime() * 60, 3)) && effectID != null && effectID.data instanceof Array && effectID.data[1].length < 20){
 								var randXC = Mathf.range(Core.graphics.getWidth() / 2) + Core.graphics.getWidth();
 								var randYC = Mathf.range(Core.graphics.getHeight() / 2) + Core.graphics.getHeight();
 								
@@ -327,7 +327,7 @@ const azathothMain = prov(() => {
 								});
 								effectID.data[1].push(tmpB);
 							};
-							if(Mathf.chance(dst * 1.5 * Time.delta())){
+							if(Mathf.chance(dst * 1.5 * Math.min(Core.graphics.getDeltaTime() * 60, 3))){
 								textureArray = regionsB.values().toArray();
 								textureB = textureArray.get(Mathf.round(Mathf.random(textureArray.size - 1)));
 								randXD = Mathf.range(0.1);
@@ -367,8 +367,8 @@ const azathothMain = prov(() => {
 		added(){
 			this.super$added();
 			
-			if(effectID == null) Effects.effect(insanityEffect, this.x, this.y, 0, [[], []]);
-			//if(effectEyes == null) Effects.effect(eyesEffect, this.x, this.y, 0, []);
+			if(effectID == null) Effect.effect(insanityEffect, this.x, this.y, 0, [[], []]);
+			//if(effectEyes == null) Effect.effect(eyesEffect, this.x, this.y, 0, []);
 		},
 		
 		drawTentacles(){

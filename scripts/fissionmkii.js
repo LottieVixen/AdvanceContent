@@ -88,18 +88,18 @@ const fissionB = extendContent(GenericSmelter, "fission-mkii", {
 			//const g = 0.06;
 			//const r = 0.04;
 			var cr = Mathf.random(0.13);
-			//var alphaRandom = ((1.0 - g) + Mathf.absin(Time.time(), 8.0, g) + Mathf.random(r) - r) * entity.warmup
+			//var alphaRandom = ((1.0 - g) + Mathf.absin(Time.time, 8.0, g) + Mathf.random(r) - r) * entity.warmup
 
-			//Draw.alpha(((1.0 - g) + Mathf.absin(Time.time(), 8.0, g) + Mathf.random(r) - r) * entity.warmup);
+			//Draw.alpha(((1.0 - g) + Mathf.absin(Time.time, 8.0, g) + Mathf.random(r) - r) * entity.warmup);
 
 			//Draw.tint(this.flameColor);
 			//Draw.blend(Blending.additive);
 			//Draw.color(Color.valueOf("f3e97900"), Color.valueOf("f3e979ff"), alphaRandom);
 			Draw.color(Color.valueOf("fad138"));
-			Fill.circle(tile.drawx(), tile.drawy(), (7.9 + Mathf.absin(Time.time(), 5.0, 1.2) + cr) * entity.warmup);
+			Fill.circle(tile.drawx(), tile.drawy(), (7.9 + Mathf.absin(Time.time, 5.0, 1.2) + cr) * entity.warmup);
 			Draw.color(Color.valueOf("ffffff"));
 			//Draw.color(Color.valueOf("f3e97900"), Color.valueOf("ffffffff"), entity.warmup);
-			Fill.circle(tile.drawx(), tile.drawy(), (6.4 + Mathf.absin(Time.time(), 5.0, 0.73) + cr) * entity.warmup);
+			Fill.circle(tile.drawx(), tile.drawy(), (6.4 + Mathf.absin(Time.time, 5.0, 0.73) + cr) * entity.warmup);
 			//Draw.blend();
 			//Draw.color();
 		};
@@ -200,8 +200,8 @@ const fissionB = extendContent(GenericSmelter, "fission-mkii", {
 			entity.totalProgress += entity.delta() * entity.warmup;
 			entity.warmup = Mathf.lerpDelta(entity.warmup, 1, 0.02);
 
-			if(Mathf.chance(Time.delta() * this.updateEffectChance)){
-				Effects.effect(this.updateEffect, entity.x + Mathf.range(this.size * Vars.tilesize / 2), entity.y + Mathf.range(this.size * Vars.tilesize / 2));
+			if(Mathf.chance(Math.min(Core.graphics.getDeltaTime() * 60, 3) * this.updateEffectChance)){
+				Effect.effect(this.updateEffect, entity.x + Mathf.range(this.size * Vars.tilesize / 2), entity.y + Mathf.range(this.size * Vars.tilesize / 2));
 			}
 		}else{
 			entity.warmup = Mathf.lerp(entity.warmup, 0, 0.02);
@@ -218,7 +218,7 @@ const fissionB = extendContent(GenericSmelter, "fission-mkii", {
 				}
 			};
 
-			Effects.effect(this.craftEffect, tile.drawx(), tile.drawy());
+			Effect.effect(this.craftEffect, tile.drawx(), tile.drawy());
 			entity.progress = 0;
         };
 		

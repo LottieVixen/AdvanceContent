@@ -9,8 +9,8 @@ const famineBullet = extend(BasicBulletType, {
 			this.scanTiles(b);
 		};
 		
-		if(Mathf.chance(Time.delta() * 0.2)){
-			Effects.effect(Fx.missileTrail, Pal.missileYellowBack, b.x, b.y, 2);
+		if(Mathf.chance(Math.min(Core.graphics.getDeltaTime() * 60, 3) * 0.2)){
+			Effect.effect(Fx.missileTrail, Pal.missileYellowBack, b.x, b.y, 2);
 		};
 		
 		if(b.getData() != null && b.getData() instanceof Position){
@@ -19,7 +19,7 @@ const famineBullet = extend(BasicBulletType, {
 				b.time(this.lifetime);
 			}
 		}else{
-			target = Units.closestTarget(b.getTeam(), b.x, b.y, this.homingRange, boolf(e => !e.isFlying() || this.collidesAir));
+			target = Units.closestTarget(b.team, b.x, b.y, this.homingRange, boolf(e => !e.isFlying() || this.collidesAir));
 			
 			if(target != null){
 				b.velocity().setAngle(Mathf.slerpDelta(b.velocity().angle(), b.angleTo(target), 0.1));
@@ -41,8 +41,8 @@ const famineBullet = extend(BasicBulletType, {
 			var g = tile.block().group;
 			var criteria = g == BlockGroup.transportation || g == BlockGroup.power || g == BlockGroup.liquids || g == BlockGroup.drills || (tile.ent() != null && tile.ent() instanceof GenericCrafter.GenericCrafterEntity);
 			
-			//return b.getTeam() != tile.getTeam() && tile.block().group == BlockGroup.transportation;
-			return b.getTeam() != tile.getTeam() && criteria;
+			//return b.team != tile.getTeam() && tile.block().group == BlockGroup.transportation;
+			return b.team != tile.getTeam() && criteria;
 		};
 		return false;
 	},
@@ -50,7 +50,7 @@ const famineBullet = extend(BasicBulletType, {
 	isOnTileAlt(b){
 		var tile = Vars.world.ltileWorld(b.x, b.y);
 		if(tile != null){
-			return b.getTeam() != tile.getTeam() && tile.block() != null && !(tile.block() instanceof StaticWall) && tile.ent() != null;
+			return b.team != tile.getTeam() && tile.block() != null && !(tile.block() instanceof StaticWall) && tile.ent() != null;
 		};
 		return false;
 	},
@@ -66,7 +66,7 @@ const famineBullet = extend(BasicBulletType, {
 			}
 		});
 		
-		var target = Units.closestTarget(b.getTeam(), b.x, b.y, this.rectRangeTile * Vars.tilesize, boolf(e => false), tileBool);
+		var target = Units.closestTarget(b.team, b.x, b.y, this.rectRangeTile * Vars.tilesize, boolf(e => false), tileBool);
 		
 		b.setData(target);
 		

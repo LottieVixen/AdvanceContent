@@ -7,7 +7,7 @@ const deathLaserEffect = elib.newEffectWDraw(76, 1300, e => {
 	const colors = [Color.valueOf("ff0000"), Color.valueOf("ff8000"), Color.valueOf("ffccaa")];
 	const strokes = [2, 1.2, 0.6];
 
-	//Lines.lineAngle(b.x, b.y, b.rot(), baseLen);
+	//Lines.lineAngle(b.x, b.y, b.vel.angle(), baseLen);
 	Draw.blend(Blending.additive);
 	for(var s = 0; s < 3; s++){
 		
@@ -18,7 +18,7 @@ const deathLaserEffect = elib.newEffectWDraw(76, 1300, e => {
 		Fill.circle(pos2.x, pos2.y, strokes[s] * 4 * e.fout());
 		
 		Lines.stroke(strokes[s] * 4 * e.fout());
-		Lines.line(pos1.x, pos1.y, pos2.x, pos2.y, CapStyle.none);
+		Lines.line(pos1.x, pos1.y, pos2.x, pos2.y, false);
 	};
 	Draw.reset();
 	Draw.blend();
@@ -108,19 +108,19 @@ const darkShockwave = elib.newEffectWDraw(56, 880, e => {
 	Draw.color(Color.valueOf("000000"));
 	Lines.stroke(2 * e.fout());
 	
-	//var rand1 = Mathf.randomSeedRange(Mathf.round(Time.time() + e.id), 4);
+	//var rand1 = Mathf.randomSeedRange(Mathf.round(Time.time + e.id), 4);
 	
 	vec.trns(e.rotation, e.finpow() * 340);
 	
 	for(var i = 0; i < sides; i++){
-		//vec.trns(360 / sides * i + e.rotation, e.finpow() * 340 + (Mathf.randomSeed(Mathf.round(Time.time() * 270 + e.id + i), -120, 2) * e.fin())).add(e.x, e.y);
-		vec.trns(360 / sides * i + e.rotation, e.finpow() * 340 + (Mathf.clamp(Mathf.randomSeed(Mathf.round(Time.time() * 270 + e.id + i), -320, 320), -320, 0) * e.fin())).add(e.x, e.y);
+		//vec.trns(360 / sides * i + e.rotation, e.finpow() * 340 + (Mathf.randomSeed(Mathf.round(Time.time * 270 + e.id + i), -120, 2) * e.fin())).add(e.x, e.y);
+		vec.trns(360 / sides * i + e.rotation, e.finpow() * 340 + (Mathf.clamp(Mathf.randomSeed(Mathf.round(Time.time * 270 + e.id + i), -320, 320), -320, 0) * e.fin())).add(e.x, e.y);
 		
 		for(var b = 0; b < 2; b++){
 			poly[(i * 2 + b)] = b == 0 ? vec.x : vec.y;
 		};
 		//poly[i] = Mathf.range(3);
-		if(Mathf.randomSeed(Mathf.round(Time.time() * 270 + e.id + i + 1), 0, 20) / 20 >= 1){
+		if(Mathf.randomSeed(Mathf.round(Time.time * 270 + e.id + i + 1), 0, 20) / 20 >= 1){
 			Lines.line(e.x, e.y, vec.x, vec.y);
 		};
 	};
@@ -158,11 +158,11 @@ baseBullet.damage = Number.MAX_VALUE;
 		const strokes = [2, 1.2, 0.6];
 		const vec = new Vec2();
 
-		//Lines.lineAngle(b.x, b.y, b.rot(), baseLen);
+		//Lines.lineAngle(b.x, b.y, b.vel.angle(), baseLen);
 		Draw.blend(Blending.additive);
 		for(var s = 0; s < 3; s++){
-			//vec.trns(b.rot(), length + (b.finpow() * 26 * (length / 100)));
-			vec.trns(b.rot(), length);
+			//vec.trns(b.vel.angle(), length + (b.finpow() * 26 * (length / 100)));
+			vec.trns(b.vel.angle(), length);
 			
 			Draw.color(colors[s]);
 			
@@ -171,7 +171,7 @@ baseBullet.damage = Number.MAX_VALUE;
 			Fill.circle(b.x + vec.x, b.y + vec.y, strokes[s] * 4 * b.fout());
 			
 			Lines.stroke(strokes[s] * 4 * b.fout());
-			Lines.line(b.x, b.y, b.x + vec.x, b.y + vec.y, CapStyle.none);
+			Lines.line(b.x, b.y, b.x + vec.x, b.y + vec.y, false);
 		};
 		Draw.reset();
 		Draw.blend();
@@ -216,7 +216,7 @@ const endGame = extendContent(PowerTurret, "end-game", {
 		
 		Draw.rect(this.baseRegion, tile.drawx(), tile.drawy());
 		Draw.blend(Blending.additive);
-		Draw.alpha((0.5 + Mathf.absin(Time.time(), 5, 0.5)) * entity.heat);
+		Draw.alpha((0.5 + Mathf.absin(Time.time, 5, 0.5)) * entity.heat);
 		Draw.rect(this.regionLights, tile.drawx(), tile.drawy());
 		Draw.blend();
 		Draw.color();
@@ -229,7 +229,7 @@ const endGame = extendContent(PowerTurret, "end-game", {
 		Draw.rect(this.wheelRegion, tile.drawx(), tile.drawy(), entity.recoil);
 		
 		Draw.blend(Blending.additive);
-		Draw.alpha((0.5 + Mathf.absin(Time.time() - 15, 5, 0.5)) * entity.heat);
+		Draw.alpha((0.5 + Mathf.absin(Time.time - 15, 5, 0.5)) * entity.heat);
 		Draw.rect(this.wheelRegionLights, tile.drawx(), tile.drawy(), entity.recoil);
 		Draw.blend();
 		Draw.reset();
@@ -237,7 +237,7 @@ const endGame = extendContent(PowerTurret, "end-game", {
 		Draw.rect(this.plateRegion, tile.drawx(), tile.drawy(), -entity.recoil);
 		
 		Draw.blend(Blending.additive);
-		Draw.alpha((0.5 + Mathf.absin(Time.time() - 30, 5, 0.5)) * entity.heat);
+		Draw.alpha((0.5 + Mathf.absin(Time.time - 30, 5, 0.5)) * entity.heat);
 		Draw.rect(this.plateRegionLights, tile.drawx(), tile.drawy(), -entity.recoil);
 		Draw.color(Color.valueOf("ff0000"));
 		Lines.stroke(1);
@@ -332,7 +332,7 @@ const endGame = extendContent(PowerTurret, "end-game", {
 			
 			//tileB.damage(Number.MAX_VALUE);
 			tileB.kill();
-			if(tileB.block.size > 2) Effects.effect(vaporizeTile, tileB.x, tileB.y, tileB.block.size);
+			if(tileB.block.size > 2) Effect.effect(vaporizeTile, tileB.x, tileB.y, tileB.block.size);
 		}
 	},
 	
@@ -343,7 +343,7 @@ const endGame = extendContent(PowerTurret, "end-game", {
 		vec2.set(x2, y2);
 		data = [vec1, vec2];
 		
-		Effects.effect(deathLaserEffect, x, y, 0, data);
+		Effect.effect(deathLaserEffect, x, y, 0, data);
 	},
 	
 	destroyBullets(tile){
@@ -352,7 +352,7 @@ const endGame = extendContent(PowerTurret, "end-game", {
 		
 		Vars.bulletGroup.intersect(tile.drawx() - this.range, tile.drawy() - this.range, this.range * 2, this.range * 2, cons(b => {
 			if(!(b instanceof Lightning)){
-				if(Mathf.within(tile.drawx(), tile.drawy(), b.x, b.y, this.range) && b.getBulletType() != null && b.getTeam() != tile.getTeam()){
+				if(Mathf.within(tile.drawx(), tile.drawy(), b.x, b.y, this.range) && b.getBulletType() != null && b.team != tile.getTeam()){
 					scanned += b.getShieldDamage();
 					scannedB += 1;
 				}
@@ -363,7 +363,7 @@ const endGame = extendContent(PowerTurret, "end-game", {
 		
 		Vars.bulletGroup.intersect(tile.drawx() - this.range, tile.drawy() - this.range, this.range * 2, this.range * 2, cons(b => {
 			if(b != null && !(b instanceof Lightning)){
-				if(Mathf.within(tile.drawx(), tile.drawy(), b.x, b.y, this.range) && b instanceof Bullet && b.getBulletType() != null && b.getTeam() != tile.getTeam()){
+				if(Mathf.within(tile.drawx(), tile.drawy(), b.x, b.y, this.range) && b instanceof Bullet && b.getBulletType() != null && b.team != tile.getTeam()){
 					var damageB = 0;
 					var currentBullet = b.getBulletType();
 					var totalFragBullets = 1;
@@ -418,8 +418,8 @@ const endGame = extendContent(PowerTurret, "end-game", {
 						if(owner instanceof HealthTrait && !owner.isDead()){
 							owner.kill();
 							this.laserEffectC(b.x, b.y, owner.x, owner.y);
-							if(owner instanceof TileEntity) Effects.effect(vaporizeTile, owner.x, owner.y, owner.block.size);
-							if(owner instanceof BaseUnit) Effects.effect(vaporize, owner.x, owner.y, owner.rotation, owner);
+							if(owner instanceof TileEntity) Effect.effect(vaporizeTile, owner.x, owner.y, owner.block.size);
+							if(owner instanceof BaseUnit) Effect.effect(vaporize, owner.x, owner.y, owner.rotation, owner);
 						};
 						
 						b.scaleTime(Mathf.lerp(b.time(), b.getBulletType().lifetime, 0.999));
@@ -445,7 +445,7 @@ const endGame = extendContent(PowerTurret, "end-game", {
 	/*experimentalEffect(unit){
 		var data = [unit, null];
 		
-		Effects.effect(vaporizeExperimental, unit.x, unit.y, unit.rotation, data);
+		Effect.effect(vaporizeExperimental, unit.x, unit.y, unit.rotation, data);
 	},*/
 	
 	onDestroyedB(tile, range){
@@ -460,12 +460,12 @@ const endGame = extendContent(PowerTurret, "end-game", {
 					//var ang = Angles.angle(tile.drawx(), tile.drawy(), unit.x, unit.y);
 					
 					//Bullet.create(visualLaser, null, tile.getTeam(), tile.drawx(), tile.drawy(), ang, dst);
-					//if(unit instanceof BaseUnit) Effects.effect(vaporize, unit.x, unit.y, unit.rotation, unit);
+					//if(unit instanceof BaseUnit) Effect.effect(vaporize, unit.x, unit.y, unit.rotation, unit);
 					
 					/* experimental effects, Very Laggy
 					if(unit instanceof BaseUnit) this.experimentalEffect(unit);
 					*/
-					if(unit instanceof BaseUnit) Effects.effect(vaporize, unit.x, unit.y, unit.rotation, unit);
+					if(unit instanceof BaseUnit) Effect.effect(vaporize, unit.x, unit.y, unit.rotation, unit);
 					
 					this.laserEffectC(tile.drawx(), tile.drawy(), unit.x, unit.y);
 					
@@ -477,8 +477,8 @@ const endGame = extendContent(PowerTurret, "end-game", {
 		
 		this.destroyTile(tile);
 		
-		Effects.effect(darkShockwave, tile.drawx(), tile.drawy());
-		Effects.effect(endGameShoot, tile.drawx(), tile.drawy(), 0, range);
+		Effect.effect(darkShockwave, tile.drawx(), tile.drawy());
+		Effect.effect(endGameShoot, tile.drawx(), tile.drawy(), 0, range);
 		this.shootSound.at(tile, Mathf.random(0.9, 1.1));
 	},
 	
@@ -499,8 +499,8 @@ const endGame = extendContent(PowerTurret, "end-game", {
 						this.laserEffectC(bullet.x, bullet.y, owner.x, owner.y);
 						if(!owner.isDead()) owner.kill();
 						
-						if(owner instanceof TileEntity) Effects.effect(vaporizeTile, owner.x, owner.y, owner.block.size);
-						if(owner instanceof BaseUnit) Effects.effect(vaporize, owner.x, owner.y, owner.rotation, owner);
+						if(owner instanceof TileEntity) Effect.effect(vaporizeTile, owner.x, owner.y, owner.block.size);
+						if(owner instanceof BaseUnit) Effect.effect(vaporize, owner.x, owner.y, owner.rotation, owner);
 					};
 				};
 				this.laserEffectC(entity.x, entity.y, bullet.x, bullet.y);
@@ -514,8 +514,8 @@ const endGame = extendContent(PowerTurret, "end-game", {
 						owner.kill();
 						
 						this.laserEffectC(entity.x, entity.y, owner.x, owner.y);
-						if(owner instanceof TileEntity) Effects.effect(vaporizeTile, owner.x, owner.y, owner.block.size);
-						if(owner instanceof BaseUnit) Effects.effect(vaporize, owner.x, owner.y, owner.rotation, owner);
+						if(owner instanceof TileEntity) Effect.effect(vaporizeTile, owner.x, owner.y, owner.block.size);
+						if(owner instanceof BaseUnit) Effect.effect(vaporize, owner.x, owner.y, owner.rotation, owner);
 					}
 				}
 			}

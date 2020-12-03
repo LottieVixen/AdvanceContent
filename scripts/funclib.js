@@ -173,11 +173,11 @@ module.exports = {
 			
 			var dst2 = Mathf.dst2(b.x, b.y, x, y);
 			
-			if(dst2 < range * range && (result == null || dst2 < cdist) && team != b.getTeam()){
+			if(dst2 < range * range && (result == null || dst2 < cdist) && team != b.team){
 				if(!Vars.android){
 					result = new TargetTrait({
 						isDead: function(){return b == null},
-						getTeam: function(){return b.getTeam()},
+						getTeam: function(){return b.team},
 						getX: function(){return b.x},
 						getY: function(){return b.y},
 						setX: function(x){b.x = x},
@@ -187,7 +187,7 @@ module.exports = {
 				}else{
 					result = new TargetTrait({
 						isDead: function(){return b == null},
-						getTeam: function(){return b.getTeam()},
+						getTeam: function(){return b.team},
 						getX: function(){return b.x},
 						getY: function(){return b.y},
 						setX: function(x){b.x = x},
@@ -231,7 +231,7 @@ module.exports = {
 		tPos.trns(rotation - 90, 0, startingLength);
 		vec2.trns(rotation - 90, 0, startingLength);
 		for(var i = 0; i < segments; i++){
-			var sine = Mathf.sin(Time.time() + (i * segTimeOffset) + timeOffset, segFrequency, segDegree + (i * segDegreeOffset));
+			var sine = Mathf.sin(Time.time + (i * segTimeOffset) + timeOffset, segFrequency, segDegree + (i * segDegreeOffset));
 			var tex = Core.atlas.find(texture + "-" + i);
 			
 			vec1.set(tPos.x, tPos.y);
@@ -256,7 +256,7 @@ module.exports = {
 		tPos.trns(rotation - 90, 0, startingLength);
 		vec2.trns(rotation - 90, 0, startingLength);
 		for(var i = 0; i < segments; i++){
-			var sine = Mathf.sin(Time.time() + (i * segTimeOffset) + timeOffset, segFrequency, segDegree + (i * segDegreeOffset));
+			var sine = Mathf.sin(Time.time + (i * segTimeOffset) + timeOffset, segFrequency, segDegree + (i * segDegreeOffset));
 			//var tex = Core.atlas.find(texture + i);
 				
 			vec1.set(tPos.x, tPos.y);

@@ -34,17 +34,17 @@ const kelvSmoke = newEffect(13, e => {
 const kelvBullet = extend(BasicBulletType, {
 	update: function(b){
 		if(b.timer.get(0, 1 + b.fslope() * 0.5)){
-			Effects.effect(this.trailEffect, this.backColor, b.x, b.y, b.rot());
+			Effect.effect(this.trailEffect, this.backColor, b.x, b.y, b.vel.angle());
 		};
 		
 		if(Mathf.chance(0.3)){
-			Effects.effect(kelvSmoke, this.backColor, b.x + Mathf.range(2.0), b.y + Mathf.range(2.0), b.rot());
+			Effect.effect(kelvSmoke, this.backColor, b.x + Mathf.range(2.0), b.y + Mathf.range(2.0), b.vel.angle());
 		}
 	},
 	
 	draw: function(b){
 		Draw.color(Color.valueOf("a9d8ff"), Color.valueOf("8494b3"), b.fin());
-		Fill.poly(b.x, b.y, 6, 3 + b.fin() * 3.1, b.rot() + b.fin() * 270);
+		Fill.poly(b.x, b.y, 6, 3 + b.fin() * 3.1, b.vel.angle() + b.fin() * 270);
 		Draw.reset();
 	}
 });
@@ -63,7 +63,7 @@ kelvBullet.collidesTiles = true;
 kelvBullet.collidesAir = true;
 kelvBullet.pierce = true;
 kelvBullet.statusDuration = 570;
-kelvBullet.status = StatusEffects.burning;
+kelvBullet.status = StatusEffect.burning;
 kelvBullet.frontColor = Color.valueOf("ffffff");
 kelvBullet.backColor = Color.valueOf("a9d8ff");
 

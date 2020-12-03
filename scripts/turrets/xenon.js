@@ -40,10 +40,10 @@ const convertDamage = newEffect(67, e => {
 
 const xenoLaser = extend(BasicBulletType, {
 	update: function(b){
-		Effects.shake(1.2, 1.2, b.x, b.y);
+		Effect.shake(1.2, 1.2, b.x, b.y);
 		if(b.timer.get(1, 5)){
 			this.scanUnits(b);
-			Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), this.lengthB * 1.15, true);
+			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), this.lengthB * 1.15, true);
 		};
 	},
 	
@@ -51,20 +51,20 @@ const xenoLaser = extend(BasicBulletType, {
 		const vec = new Vec2();
 		
 		for(var i = 0; i < this.searchAccuracy; i++){
-			vec.trns(b.rot(), (this.lengthB / this.searchAccuracy) * i);
+			vec.trns(b.vel.angle(), (this.lengthB / this.searchAccuracy) * i);
 			vec.add(b.x, b.y);
 			
 			var radius = (this.lengthB / this.searchAccuracy) * 2;
 			
-			Units.nearbyEnemies(b.getTeam(), vec.x - radius, vec.y - radius, radius * 2, radius * 2, cons(unit => {
+			Units.nearbyEnemies(b.team, vec.x - radius, vec.y - radius, radius * 2, radius * 2, cons(unit => {
 				if(unit != null){
-					if(Mathf.within(vec.x, vec.y, unit.x, unit.y, radius) && unit.getTeam() != b.getTeam() && unit instanceof BaseUnit && !unit.isDead()){
+					if(Mathf.within(vec.x, vec.y, unit.x, unit.y, radius) && unit.getTeam() != b.team && unit instanceof BaseUnit && !unit.isDead()){
 						if(unit.health() < Math.max(unit.maxHealth() * 0.05, 85)){
 							var lastUnit = unit;
 							
 							unit.kill();
 							
-							var newUnit = lastUnit.getType().create(b.getTeam());
+							var newUnit = lastUnit.getType().create(b.team);
 							newUnit.set(lastUnit.x, lastUnit.y);
 							//newUnit.set(0, 0);
 							newUnit.rotation = lastUnit.rotation;
@@ -80,9 +80,9 @@ const xenoLaser = extend(BasicBulletType, {
 							//newUnit.damage(newUnit.maxHealth() * 0.9);
 							newUnit.velocity().set(lastUnit.velocity());
 							
-							Effects.effect(changeTeam, newUnit.x, newUnit.y, newUnit.rotation, newUnit);
+							Effect.effect(changeTeam, newUnit.x, newUnit.y, newUnit.rotation, newUnit);
 							b.getOwner().damage(Math.min((newUnit.maxHealth() * 0.5), (b.getOwner().maxHealth() - 1)));
-							Effects.effect(convertDamage, b.getOwner().x, b.getOwner().y);
+							Effect.effect(convertDamage, b.getOwner().x, b.getOwner().y);
 							
 							//health changes after spawn, that means you cant set its health
 							
@@ -92,7 +92,7 @@ const xenoLaser = extend(BasicBulletType, {
 							
 							//print(newUnit);
 							//unit.setSpawner(b.getOwner().getTile());
-							//unit.getTeam() = b.getTeam();
+							//unit.getTeam() = b.team;
 						}
 					}
 				}
@@ -102,7 +102,7 @@ const xenoLaser = extend(BasicBulletType, {
 	
 	hit: function(b, hitx, hity){
 		if(hitx != null && hity != null){
-			Effects.effect(this.hitEffect, hitx, hity);
+			Effect.effect(this.hitEffect, hitx, hity);
 		}
 	},
 	
@@ -115,11 +115,11 @@ const xenoLaser = extend(BasicBulletType, {
 		const tmpColor = new Color();
 
 		for(var s = 0; s < 4; s++){
-			Draw.color(tmpColor.set(colors[s]).mul(1.0 + Mathf.absin(Time.time(), 1.2, 0.4)));
+			Draw.color(tmpColor.set(colors[s]).mul(1.0 + Mathf.absin(Time.time, 1.2, 0.4)));
 			for(var i = 0; i < 4; i++){
-				Tmp.v1.trns(b.rot() + 180.0, (lenscales[i] - 0.9) * 55.0);
-				Lines.stroke((9 + Mathf.absin(Time.time(), 1.7, 3.1)) * b.fout() * strokes[s] * tscales[i]);
-				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.rot(), this.lengthB * b.fout() * lenscales[i], CapStyle.none);
+				Tmp.v1.trns(b.vel.angle() + 180.0, (lenscales[i] - 0.9) * 55.0);
+				Lines.stroke((9 + Mathf.absin(Time.time, 1.7, 3.1)) * b.fout() * strokes[s] * tscales[i]);
+				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.vel.angle(), this.lengthB * b.fout() * lenscales[i], false);
 			}
 		};
 		Draw.reset();

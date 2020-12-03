@@ -1,4 +1,4 @@
-var corrupted = StatusEffects.none;
+var corrupted = StatusEffect.none;
 
 const elib = require("effectlib");
 
@@ -31,10 +31,10 @@ const changeTeam = elib.newEffectWDraw(78, 512, e => {
 
 const strdustCrusLaser = extend(BasicBulletType, {
 	update: function(b){
-		Effects.shake(1.2, 1.2, b.x, b.y);
+		Effect.shake(1.2, 1.2, b.x, b.y);
 		if(b.timer.get(1, 5)){
 			this.scanUnits(b);
-			Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), this.lengthB, true);
+			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), this.lengthB, true);
 		};
 	},
 	
@@ -42,20 +42,20 @@ const strdustCrusLaser = extend(BasicBulletType, {
 		const vec = new Vec2();
 		
 		for(var i = 0; i < this.searchAccuracy; i++){
-			vec.trns(b.rot(), (this.lengthB / this.searchAccuracy) * i);
+			vec.trns(b.vel.angle(), (this.lengthB / this.searchAccuracy) * i);
 			vec.add(b.x, b.y);
 			
 			var radius = (this.lengthB / this.searchAccuracy) * 2;
 			
-			Units.nearbyEnemies(b.getTeam(), vec.x - radius, vec.y - radius, radius * 2, radius * 2, cons(unit => {
+			Units.nearbyEnemies(b.team, vec.x - radius, vec.y - radius, radius * 2, radius * 2, cons(unit => {
 				if(unit != null){
-					if(Mathf.within(vec.x, vec.y, unit.x, unit.y, radius) && unit.getTeam() != b.getTeam() && unit instanceof BaseUnit && !unit.isDead()){
+					if(Mathf.within(vec.x, vec.y, unit.x, unit.y, radius) && unit.getTeam() != b.team && unit instanceof BaseUnit && !unit.isDead()){
 						if(unit.health() < Math.max(unit.maxHealth() * strdustCrusLaser.enemyHealthRatio, strdustCrusLaser.enemyMinHealthRatio)){
 							var lastUnit = unit;
 							
 							unit.kill();
 							
-							var newUnit = lastUnit.getType().create(b.getTeam());
+							var newUnit = lastUnit.getType().create(b.team);
 							newUnit.set(lastUnit.x, lastUnit.y);
 							newUnit.rotation = lastUnit.rotation;
 							newUnit.add();
@@ -63,9 +63,9 @@ const strdustCrusLaser = extend(BasicBulletType, {
 							newUnit.applyEffect(corrupted, Number.MAX_VALUE);
 							newUnit.velocity().set(lastUnit.velocity());
 							
-							Effects.effect(changeTeam, newUnit.x, newUnit.y, newUnit.rotation, newUnit);
+							Effect.effect(changeTeam, newUnit.x, newUnit.y, newUnit.rotation, newUnit);
 							//b.getOwner().damage(Math.min((newUnit.maxHealth() * 0.5), (b.getOwner().maxHealth() - 1)));
-							//Effects.effect(convertDamage, b.getOwner().x, b.getOwner().y);
+							//Effect.effect(convertDamage, b.getOwner().x, b.getOwner().y);
 							
 							//health changes after spawn, that means you cant set its health
 						}
@@ -77,15 +77,15 @@ const strdustCrusLaser = extend(BasicBulletType, {
 	
 	hit: function(b, hitx, hity){
 		if(hitx != null && hity != null){
-			Effects.effect(this.hitEffect, hitx, hity);
+			Effect.effect(this.hitEffect, hitx, hity);
 			var tile = Vars.world.ltileWorld(hitx, hity);
 			if(tile != null && tile.ent() != null){
 				var entity = tile.ent();
 				
 				if(entity.health() < Math.max(entity.maxHealth() * this.enemyHealthRatio, this.enemyMinHealthRatio)){
-					tile.setTeam(b.getTeam());
+					tile.setTeam(b.team);
 					if(tile.block() != null){
-						Effects.effect(changeTeamTile, tile.drawx(), tile.drawy(), tile.block().size);
+						Effect.effect(changeTeamTile, tile.drawx(), tile.drawy(), tile.block().size);
 					}
 				}
 			}
@@ -101,11 +101,11 @@ const strdustCrusLaser = extend(BasicBulletType, {
 		const tmpColor = new Color();
 
 		for(var s = 0; s < 4; s++){
-			Draw.color(tmpColor.set(colors[s]).mul(1.0 + (0.3 - Mathf.absin(Time.time(), 1.7, 0.3))));
+			Draw.color(tmpColor.set(colors[s]).mul(1.0 + (0.3 - Mathf.absin(Time.time, 1.7, 0.3))));
 			for(var i = 0; i < 4; i++){
-				Tmp.v1.trns(b.rot() + 180.0, (lenscales[i] - 0.9) * 55.0);
-				Lines.stroke((11 + Mathf.absin(Time.time(), 1.7, 3.1)) * b.fout() * strokes[s] * tscales[i]);
-				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.rot(), this.lengthB * lenscales[i], CapStyle.none);
+				Tmp.v1.trns(b.vel.angle() + 180.0, (lenscales[i] - 0.9) * 55.0);
+				Lines.stroke((11 + Mathf.absin(Time.time, 1.7, 3.1)) * b.fout() * strokes[s] * tscales[i]);
+				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.vel.angle(), this.lengthB * lenscales[i], false);
 			}
 		};
 		Draw.reset();

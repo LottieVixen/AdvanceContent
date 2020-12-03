@@ -22,12 +22,12 @@ const bladeLaser = extend(BasicBulletType, {
 	
 	update: function(b){
 		if(b.timer.get(1, 17)){
-			Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), 170.0, false);
+			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), 170.0, false);
 		};
 	},
 	
 	/*init: function(b){
-		Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), 190.0);
+		Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), 190.0);
 	},*/
 	
 	draw: function(b){
@@ -39,14 +39,14 @@ const bladeLaser = extend(BasicBulletType, {
 		const baseLen = length * f;
 		//const lengthB = new Vec2();
 
-		//Lines.lineAngle(b.x, b.y, b.rot(), baseLen);
+		//Lines.lineAngle(b.x, b.y, b.vel.angle(), baseLen);
 		for(var s = 0; s < 3; s++){
 			Draw.color(colors[s]);
 			for(var i = 0; i < 4; i++){
-				//lengthB.trns(b.rot(), baseLen * lenscales[i]);
+				//lengthB.trns(b.vel.angle(), baseLen * lenscales[i]);
 				Lines.stroke(7 * b.fout() * (s == 0 ? 1.5 : s == 1 ? 1 : 0.3) * tscales[i]);
 				//Lines.line(b.getOwner().x, b.getOwner().y, b.x + lengthB.x, b.y + lengthB.y);
-				Lines.lineAngle(b.x, b.y, b.rot(), baseLen * lenscales[i]);
+				Lines.lineAngle(b.x, b.y, b.vel.angle(), baseLen * lenscales[i]);
 			}
 		};
 		Draw.reset();
@@ -96,7 +96,7 @@ const blad = extendContent(Mech, "blade", {
 		
 		if(Mathf.chance(sclb)){
 			pred.trns(player.velocity().angle(), 16);
-			Effects.effect(shipTrail, Pal.surge, player.x + Mathf.range(4.7) + pred.x, player.y + Mathf.range(4.7) + pred.y, player.rotation);
+			Effect.effect(shipTrail, Pal.surge, player.x + Mathf.range(4.7) + pred.x, player.y + Mathf.range(4.7) + pred.y, player.rotation);
 			if(Mathf.chance(0.25)){
 				Lightning.create(player.getTeam(), goldSurge, 18 * Vars.state.rules.playerDamageMultiplier, player.x, player.y, player.rotation + Mathf.range(21.0), Mathf.floorPositive((player.velocity().len() * 2) + Mathf.random(2, 4)));
 			}

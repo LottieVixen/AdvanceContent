@@ -36,7 +36,7 @@ const OvergrowthShootEffect = newEffect(10, e => {
 const grassLaser = extend(BasicBulletType, {
 	update: function(b){
 		if(b.timer.get(1, 14)){
-			Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), this.lengthA + 40, false);
+			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), this.lengthA + 40, false);
 		};
 	},
 	
@@ -54,19 +54,19 @@ const grassLaser = extend(BasicBulletType, {
 			var rnd3 = Mathf.randomSeed(b.id + z * 4, 0, 110);
 			var rnd4 = Mathf.randomSeed(b.id + z * 5, 50, 90) / 10;
 			var rnd5 = Mathf.randomSeedRange(b.id + z * 6, 4);
-			vec.trns(b.rot(), rnd3);
+			vec.trns(b.vel.angle(), rnd3);
 			Draw.color(primeColor);
-			lib.lineTentacleRenderer(b.x + vec.x, b.y + vec.y, b.rot() + (rnd1 * b.fout()), 2.5 * b.fout(), 0.2, 10, rnd4 * b.fin(), 4, 2, rnd2 * b.fout(), rnd5 * b.fout(), 12, 0);
+			lib.lineTentacleRenderer(b.x + vec.x, b.y + vec.y, b.vel.angle() + (rnd1 * b.fout()), 2.5 * b.fout(), 0.2, 10, rnd4 * b.fin(), 4, 2, rnd2 * b.fout(), rnd5 * b.fout(), 12, 0);
 		};
 		
-		//Lines.lineAngle(b.x, b.y, b.rot(), baseLen);
+		//Lines.lineAngle(b.x, b.y, b.vel.angle(), baseLen);
 		for(var s = 0; s < 4; s++){
 			//Draw.color(colors[s]);
-			Draw.color(tmpColor.set(colors[s]).mul(1.0 + Mathf.absin(Time.time(), 1.0, 0.2)));
+			Draw.color(tmpColor.set(colors[s]).mul(1.0 + Mathf.absin(Time.time, 1.0, 0.2)));
 			for(var i = 0; i < 4; i++){
-				Tmp.v1.trns(b.rot() + 180.0, (lenscales[i] - 1.3) * 35.0);
-				Lines.stroke((9 + Mathf.absin(Time.time(), 1.4, 1.5)) * b.fout() * strokes[s] * tscales[i]);
-				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.rot(), this.lengthA * lenscales[i], CapStyle.none);
+				Tmp.v1.trns(b.vel.angle() + 180.0, (lenscales[i] - 1.3) * 35.0);
+				Lines.stroke((9 + Mathf.absin(Time.time, 1.4, 1.5)) * b.fout() * strokes[s] * tscales[i]);
+				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.vel.angle(), this.lengthA * lenscales[i], false);
 			}
 		};
 		Draw.reset();
@@ -84,19 +84,19 @@ grassLaser.pierce = true;
 
 const snakeBullet = extend(BasicBulletType, {
 	update: function(b){
-		Damage.collideLine(b, b.getTeam(), Fx.none, b.x, b.y, b.rot() + 180, 75.0 * b.fin());
+		Damage.collideLine(b, b.team, Fx.none, b.x, b.y, b.vel.angle() + 180, 75.0 * b.fin());
 	},
 	
 	draw: function(b){
 		Draw.color(this.backColor);
-		Draw.rect(this.backRegion, b.x, b.y, this.bulletWidth, this.bulletHeight, b.rot() - 90);
+		Draw.rect(this.backRegion, b.x, b.y, this.bulletWidth, this.bulletHeight, b.vel.angle() - 90);
 		Draw.color(this.frontColor);
-		Draw.rect(this.frontRegion, b.x, b.y, this.bulletWidth, this.bulletHeight, b.rot() - 90);
+		Draw.rect(this.frontRegion, b.x, b.y, this.bulletWidth, this.bulletHeight, b.vel.angle() - 90);
 		
 		rnd1 = Mathf.randomSeedRange(b.id * 230, 90);
 		
 		Draw.color(primeColor);
-		lib.lineTentacleRenderer(b.x, b.y, b.rot() + 180, 2, 0.1, 10, 8 * b.fin(), 4, 2, 18, 2, 12, rnd1);
+		lib.lineTentacleRenderer(b.x, b.y, b.vel.angle() + 180, 2, 0.1, 10, 8 * b.fin(), 4, 2, 18, 2, 12, rnd1);
 		Draw.color();
 	}
 });
@@ -115,7 +115,7 @@ const overgrowthBulletAFrag = extend(BasicBulletType, {
 		var rndRot = Mathf.randomSeedRange(b.id + 45, 6);
 		var rndRange = Mathf.randomSeed(b.id + 7, 25, 50) / 50;
 		if(b.timer.get(1, 17)){
-			Damage.collideLine(b, b.getTeam(), Fx.none, b.x, b.y, b.rot() + rndRot, 45.0 * rndRange);
+			Damage.collideLine(b, b.team, Fx.none, b.x, b.y, b.vel.angle() + rndRot, 45.0 * rndRange);
 		};
 	},
 	
@@ -132,9 +132,9 @@ const overgrowthBulletAFrag = extend(BasicBulletType, {
 		var rndStroke = Mathf.randomSeed(b.id + 16, 35, 50) / 50;
 		var slopeB = (b.fslope() * -1) + 1;
 		
-		vec1.trns(rndRot * slopeB + (b.rot() + rndRot4), 18 * b.finpow() * rndRange);
-		vec2.trns(rndRot2 * slopeB + (b.rot() + rndRot4), 36 * b.finpow() * rndRange);
-		vec3.trns(rndRot3 * slopeB + (b.rot() + rndRot4), 54 * b.finpow() * rndRange);
+		vec1.trns(rndRot * slopeB + (b.vel.angle() + rndRot4), 18 * b.finpow() * rndRange);
+		vec2.trns(rndRot2 * slopeB + (b.vel.angle() + rndRot4), 36 * b.finpow() * rndRange);
+		vec3.trns(rndRot3 * slopeB + (b.vel.angle() + rndRot4), 54 * b.finpow() * rndRange);
 	
 		var posAx = b.x + vec1.x;
 		var posAy = b.y + vec1.y;
@@ -154,7 +154,7 @@ overgrowthBulletAFrag.lifetime = 16;
 overgrowthBulletAFrag.damage = 6;
 overgrowthBulletAFrag.speed = 0.001;
 overgrowthBulletAFrag.pierce = true;
-overgrowthBulletAFrag.status = StatusEffects.tarred;
+overgrowthBulletAFrag.status = StatusEffect.tarred;
 overgrowthBulletAFrag.statusDuration = 300;
 overgrowthBulletAFrag.keepVelocity = false;
 overgrowthBulletAFrag.despawnEffect = Fx.none;
@@ -168,7 +168,7 @@ overgrowthBulletA.bulletWidth = 11;
 overgrowthBulletA.bulletHeight = 17;
 overgrowthBulletA.bulletShrink = 0;
 overgrowthBulletA.splashDamageRadius = 16;
-//overgrowthBulletA.status = StatusEffects.tarred;
+//overgrowthBulletA.status = StatusEffect.tarred;
 overgrowthBulletA.backColor = Color.valueOf("cbd97f");
 overgrowthBulletA.frontColor = Color.valueOf("edf3a9");
 overgrowthBulletA.fragBullet = overgrowthBulletAFrag;
@@ -192,18 +192,18 @@ const pestilenceFly = extend(MissileBulletType, {
 	},
 	
 	update: function(b){
-		//b.velocity().rotate(Mathf.sin(Time.time() + b.id * 4422, this.weaveScale, this.weaveMag) * Time.delta());
+		//b.velocity().rotate(Mathf.sin(Time.time + b.id * 4422, this.weaveScale, this.weaveMag) * Math.min(Core.graphics.getDeltaTime() * 60, 3));
 		
 		if(Mathf.chance(0.2)){
-            Effects.effect(Fx.missileTrail, primeColor, b.x, b.y, 2.0);
+            Effect.effect(Fx.missileTrail, primeColor, b.x, b.y, 2.0);
         }
 		
         if(this.homingPower > 0.0001){
-            /*TargetTrait*/ target = Units.closestTarget(b.getTeam(), b.x, b.y, this.homingRange);
+            /*TargetTrait*/ target = Units.closestTarget(b.team, b.x, b.y, this.homingRange);
             if(target != null){
                 b.velocity().setAngle(Mathf.slerpDelta(b.velocity().angle(), b.angleTo(target), 0.12));
 				if(b.timer.get(1, 9)){
-					Calls.createBullet(pestilenceShot, b.getTeam(), b.x, b.y, b.rot(), Mathf.random(0.9, 1.0), Mathf.random(0.8, 1.0));
+					Calls.createBullet(pestilenceShot, b.team, b.x, b.y, b.vel.angle(), Mathf.random(0.9, 1.0), Mathf.random(0.8, 1.0));
 				}
             }
         }
@@ -232,7 +232,7 @@ const overgrowthBullet = extend(BasicBulletType, {
 	
 	despawned: function(b){
 		for(var i = 0; i < 12; i++){
-			Bullet.create(this.frags[Mathf.round(Mathf.random(0, 3))], b, b.x, b.y, b.rot() + Mathf.range(32.0), Mathf.random(0.75, 1.25));
+			Bullet.create(this.frags[Mathf.round(Mathf.random(0, 3))], b, b.x, b.y, b.vel.angle() + Mathf.range(32.0), Mathf.random(0.75, 1.25));
 		}
 	},
 	
@@ -282,8 +282,8 @@ const overgrowth = extendContent(Mech, "overgrowth-summoner", {
 	},
 	
 	draw: function(player){
-		const sin = Mathf.sin(Time.time(), 6, 0.5);
-		const cos = Mathf.cos(Time.time(), 6, 0.5);
+		const sin = Mathf.sin(Time.time, 6, 0.5);
+		const cos = Mathf.cos(Time.time, 6, 0.5);
 		
 		Draw.blend(Blending.additive);
 		Draw.rect(this.lightRegion, player.x + sin, player.y + cos, player.rotation - 90);

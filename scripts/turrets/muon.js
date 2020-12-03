@@ -4,7 +4,7 @@ const muonLaser = extend(BasicBulletType, {
 	update: function(b){
 		var velocity = b.velocity().len() / this.speed;
 		if(b.timer.get(1, 15)){
-			Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), this.laserLength * velocity, true);
+			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), this.laserLength * velocity, true);
 		};
 	},
 	
@@ -19,9 +19,9 @@ const muonLaser = extend(BasicBulletType, {
 		for(var s = 0; s < 4; s++){
 			Draw.color(colors[s]);
 			for(var i = 0; i < 4; i++){
-				Tmp.v1.trns(b.rot() + 180.0, (lenscales[i] - 1.0) * 45.0);
+				Tmp.v1.trns(b.vel.angle() + 180.0, (lenscales[i] - 1.0) * 45.0);
 				Lines.stroke(3.8 * b.fout() * strokes[s] * tscales[i]);
-				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.rot(), this.laserLength * lenscales[i] * velocity, CapStyle.none);
+				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.vel.angle(), this.laserLength * lenscales[i] * velocity, false);
 			}
 		};
 		Draw.reset();
@@ -104,14 +104,14 @@ const muon = extendContent(PowerTurret, "muon", {
 		this.super$update(tile);
 		
 		if(entity.target == null){
-			entity.setTargetTime(entity.getTargetTime() + Time.delta());
+			entity.setTargetTime(entity.getTargetTime() + Math.min(Core.graphics.getDeltaTime() * 60, 3));
 		}else{
 			entity.setTargetTime(0);
 		};
 		
 		if(entity.getTargetTime() > 60 || power < 0.0001){
 			//entity.setFrame(Mathf.lerpDelta(entity.getFrame(), 0, 0.06));
-			entity.setFrame(entity.getFrame() - (Time.delta() / 3));
+			entity.setFrame(entity.getFrame() - (Math.min(Core.graphics.getDeltaTime() * 60, 3) / 3));
 			entity.setFrame(Mathf.clamp(entity.getFrame(), 0, this.animationRegions.length));
 			entity.setTargetTime(60);
 		};
@@ -126,7 +126,7 @@ const muon = extendContent(PowerTurret, "muon", {
 		
 		if(power > 0.0001){
 			//entity.setFrame(Mathf.lerpDelta(entity.getFrame(), this.animationRegions.length, 0.06 * power));
-			entity.setFrame(entity.getFrame() + (Time.delta() / 3));
+			entity.setFrame(entity.getFrame() + (Math.min(Core.graphics.getDeltaTime() * 60, 3) / 3));
 			entity.setFrame(Mathf.clamp(entity.getFrame(), 0, this.animationRegions.length));
 		}
 	},
@@ -168,12 +168,12 @@ const muon = extendContent(PowerTurret, "muon", {
 
 		entity = tile.ent();
 
-		Effects.effect(shootEffectb, tile.drawx() + this.tr.x, tile.drawy() + this.tr.y, entity.rotation + angle);
-		Effects.effect(smokeEffectb, tile.drawx() + this.tr.x, tile.drawy() + this.tr.y, entity.rotation + angle);
+		Effect.effect(shootEffectb, tile.drawx() + this.tr.x, tile.drawy() + this.tr.y, entity.rotation + angle);
+		Effect.effect(smokeEffectb, tile.drawx() + this.tr.x, tile.drawy() + this.tr.y, entity.rotation + angle);
 		//this.shootSound.at(tile, Mathf.random(0.9, 1.1));
 
 		if(this.shootShake > 0){
-			Effects.shake(this.shootShake, this.shootShake, entity);
+			Effect.shake(this.shootShake, this.shootShake, entity);
 		};
 
 		entity.recoil = this.recoil;

@@ -1,7 +1,7 @@
 const bosonHiggsbullet = extend(BasicBulletType, {
 	update: function(b){
 		if(b.timer.get(1, 15)){
-			Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), this.laserLength, true);
+			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), this.laserLength, true);
 		};
 	},
 	
@@ -15,9 +15,9 @@ const bosonHiggsbullet = extend(BasicBulletType, {
 		for(var s = 0; s < 4; s++){
 			Draw.color(colors[s]);
 			for(var i = 0; i < 4; i++){
-				Tmp.v1.trns(b.rot() + 180.0, (lenscales[i] - 1.0) * 45.0);
+				Tmp.v1.trns(b.vel.angle() + 180.0, (lenscales[i] - 1.0) * 45.0);
 				Lines.stroke(5.8 * b.fout() * strokes[s] * tscales[i]);
-				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.rot(), this.laserLength * lenscales[i], CapStyle.none);
+				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.vel.angle(), this.laserLength * lenscales[i], false);
 			}
 		};
 		Draw.reset();

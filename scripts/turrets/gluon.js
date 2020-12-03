@@ -4,7 +4,7 @@ const whirl = newEffect(65, e => {
 	const vec = new Vec2();
 	for(var i = 0; i < 2; i++){
 		var h = i * 2;
-		var rand1 = Interpolation.exp5In.apply((Mathf.randomSeedRange(e.id + h, 1) + 1) / 2);
+		var rand1 = Interp.exp5In.apply((Mathf.randomSeedRange(e.id + h, 1) + 1) / 2);
 		var rand2 = (Mathf.randomSeedRange(e.id * 2 + h, 360) + 360) / 2;
 		var rand3 = (Mathf.randomSeedRange(e.id * 4 + h, 5) + 5) / 2;
 		var angle = rand2 + ((180 + rand3) * e.fin());
@@ -31,7 +31,7 @@ const laserEffect = elib.newEffectWDraw(7, 400, e => {
 	Fill.circle(pos2.x, pos2.y, stroke * 2 * e.fout());
 		
 	Lines.stroke(stroke * 2 * e.fout());
-	Lines.line(pos1.x, pos1.y, pos2.x, pos2.y, CapStyle.none);
+	Lines.line(pos1.x, pos1.y, pos2.x, pos2.y, false);
 	Draw.reset();
 	Draw.blend();
 });
@@ -49,14 +49,14 @@ const gluonBulletEffect = extend(BasicBulletType, {
 		const vec = new Vec2();
 		const vec2 = new Vec2();
 		
-		if(Mathf.chance(Time.delta() * (0.7 * b.fout()))){
-			Effects.effect(whirl, b.x, b.y);
+		if(Mathf.chance(Math.min(Core.graphics.getDeltaTime() * 60, 3) * (0.7 * b.fout()))){
+			Effect.effect(whirl, b.x, b.y);
 		};
 		
-		Units.nearbyEnemies(b.getTeam(), b.x - this.rangeB, b.y - this.rangeB, this.rangeB * 2, this.rangeB * 2, cons(u => {
+		Units.nearbyEnemies(b.team, b.x - this.rangeB, b.y - this.rangeB, this.rangeB * 2, this.rangeB * 2, cons(u => {
 			if(u != null && Mathf.within(b.x, b.y, u.x, u.y, this.rangeB)){
 				if(u instanceof SolidEntity){
-					var interp = this.strength * Interpolation.pow2In.apply(b.fout());
+					var interp = this.strength * Interp.pow2In.apply(b.fout());
 					var dst = Math.abs((Mathf.dst(b.x, b.y, u.x, u.y) / this.rangeB) - 1) * interp;
 					var ang = Angles.angle(u.x, u.y, b.x, b.y);
 					
@@ -73,7 +73,7 @@ const gluonBulletEffect = extend(BasicBulletType, {
 					
 					//var data = [b, u, interp];
 					
-					//Effects.effect(laserEffect, b.x, b.y, 0, data);
+					//Effect.effect(laserEffect, b.x, b.y, 0, data);
 				}
 			}
 		}));
@@ -104,16 +104,16 @@ const gluonBullet = extend(BasicBulletType, {
 		const vec = new Vec2();
 		
 		if(b.timer.get(0, 2 + b.fslope() * 1.5)){
-			Effects.effect(gluonTrail, this.backColor, b.x, b.y, 1 + (b.fslope() * 4));
+			Effect.effect(gluonTrail, this.backColor, b.x, b.y, 1 + (b.fslope() * 4));
 		};
 		
-		Units.nearbyEnemies(b.getTeam(), b.x - this.rangeB, b.y - this.rangeB, this.rangeB * 2, this.rangeB * 2, cons(u => {
+		Units.nearbyEnemies(b.team, b.x - this.rangeB, b.y - this.rangeB, this.rangeB * 2, this.rangeB * 2, cons(u => {
 			if(u != null && Mathf.within(b.x, b.y, u.x, u.y, this.rangeB)){
 				if(u instanceof SolidEntity){
 					var dst = Math.abs((Mathf.dst(b.x, b.y, u.x, u.y) / this.rangeB) - 1) * this.strength;
 					var ang = Angles.angle(u.x, u.y, b.x, b.y);
 					
-					if(Angles.angleDist(b.rot() - 180, ang - 180) < 90){
+					if(Angles.angleDist(b.vel.angle() - 180, ang - 180) < 90){
 						//print("aaaa");
 						
 						vec.trns(ang, dst);
@@ -126,7 +126,7 @@ const gluonBullet = extend(BasicBulletType, {
 						
 						var data = [b, u, this.strength];
 						
-						Effects.effect(laserEffect, b.x, b.y, 0, data);
+						Effect.effect(laserEffect, b.x, b.y, 0, data);
 					};
 				}
 			}
@@ -136,7 +136,7 @@ const gluonBullet = extend(BasicBulletType, {
 	despawned(b){
 		this.super$despawned(b);
 		
-		Bullet.create(gluonBulletEffect, b, b.x, b.y, b.rot());
+		Bullet.create(gluonBulletEffect, b, b.x, b.y, b.vel.angle());
 	},
 	
 	draw: function(b){

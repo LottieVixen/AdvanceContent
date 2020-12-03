@@ -75,11 +75,11 @@ const scourgeMissile = extend(BasicBulletType, {
 	update(b){
 		this.super$update(b);
 		
-		if(Mathf.chance(Time.delta() * 0.2)){
-			Effects.effect(Fx.missileTrail, Pal.missileYellowBack, b.x, b.y, 2);
+		if(Mathf.chance(Math.min(Core.graphics.getDeltaTime() * 60, 3) * 0.2)){
+			Effect.effect(Fx.missileTrail, Pal.missileYellowBack, b.x, b.y, 2);
 		};
 		
-		b.velocity().rotate(Mathf.sin(Time.time() + b.id * 4422, this.weaveScale, this.weaveMag) * Time.delta());
+		b.velocity().rotate(Mathf.sin(Time.time + b.id * 4422, this.weaveScale, this.weaveMag) * Math.min(Core.graphics.getDeltaTime() * 60, 3));
 	}
 });
 scourgeMissile.speed = 7;
@@ -109,14 +109,14 @@ const scourgeBullet = extend(BasicBulletType, {
 		this.super$update(b);
 		
 		if(b.timer.get(1, 32767)){
-			b.setData([b.getOwner(), b.getTeam()]);
+			b.setData([b.getOwner(), b.team]);
 		};
 		
-		if(b.getData() != null && (b.getOwner() != b.getData()[0] || b.getTeam() != b.getData()[1])) b.resetOwner(b.getData()[0], b.getData()[1]);
+		if(b.getData() != null && (b.getOwner() != b.getData()[0] || b.team != b.getData()[1])) b.resetOwner(b.getData()[0], b.getData()[1]);
 		
 		/*b.hitbox(tempRect);
-		Units.nearbyEnemies(b.getTeam(), tempRect.x, tempRect.y, tempRect.width, tempRect.height, cons(unit => {
-			if(unit.getTeam() != b.getTeam()){
+		Units.nearbyEnemies(b.team, tempRect.x, tempRect.y, tempRect.width, tempRect.height, cons(unit => {
+			if(unit.getTeam() != b.team){
 				var lastHealthC = unit.health();
 				
 				print(lastHealthC);
@@ -139,7 +139,7 @@ const scourgeBullet = extend(BasicBulletType, {
 			}
 		}));*/
 		
-		b.velocity().rotate(Mathf.sin(Time.time() + b.id * 4422, this.weaveScale, this.weaveMag) * Time.delta());
+		b.velocity().rotate(Mathf.sin(Time.time + b.id * 4422, this.weaveScale, this.weaveMag) * Math.min(Core.graphics.getDeltaTime() * 60, 3));
 	},
 	
 	hit(b, x, y){
@@ -147,8 +147,8 @@ const scourgeBullet = extend(BasicBulletType, {
 		this.super$hit(b, x, y);
 		
 		b.hitbox(tempRect);
-		Units.nearbyEnemies(b.getTeam(), tempRect.x, tempRect.y, tempRect.width, tempRect.height, cons(unit => {
-			if(unit.getTeam() != b.getTeam()){
+		Units.nearbyEnemies(b.team, tempRect.x, tempRect.y, tempRect.width, tempRect.height, cons(unit => {
+			if(unit.getTeam() != b.team){
 				var lastHealthC = unit.health();
 				
 				//print(lastHealthC);
@@ -286,7 +286,7 @@ const overlayBullet = extend(BasicBulletType, {
 		var otherBType = otherBullet.getBulletType();
 		if(otherBullet.getOwner() instanceof Unit){
 			otherBullet.hitbox(tempRect);
-			Units.nearbyEnemies(b.getTeam(), tempRect.x, tempRect.y, tempRect.width, tempRect.height, cons(unit => {
+			Units.nearbyEnemies(b.team, tempRect.x, tempRect.y, tempRect.width, tempRect.height, cons(unit => {
 				if(unit == otherBullet.getOwner()){
 					unit.damage(otherBullet.damage());
 					unit.velocity().add(Tmp.v3.set(unit.getX(), unit.getY()).sub(otherBullet.x, otherBullet.y).setLength(otherBType.knockback / unit.mass()));
@@ -622,7 +622,7 @@ const scourgeSegment = prov(() => {
 			var angle = Angles.angle(this.x, this.y, parentB.x + tempVecC.x, parentB.y + tempVecC.y);
 			var vel = this.velocity();
 			
-			if(!Angles.near(angle, parentB.rotation, 20)) angle = Mathf.slerp(angle, parentB.rotation, Mathf.clamp((Angles.angleDist(angle, parentB.rotation) - 20) / 40) * 0.3 * Mathf.clamp(Time.delta(), 0, 1));
+			if(!Angles.near(angle, parentB.rotation, 20)) angle = Mathf.slerp(angle, parentB.rotation, Mathf.clamp((Angles.angleDist(angle, parentB.rotation) - 20) / 40) * 0.3 * Mathf.clamp(Math.min(Core.graphics.getDeltaTime() * 60, 3), 0, 1));
 			
 			/*if(!Angles.within(this.rotation, parentB.rotation, 5)){
 				angle = Mathf.slerp(angle, parentB.rotation, 0.1);
@@ -637,7 +637,7 @@ const scourgeSegment = prov(() => {
 				//tempVecB.trns(angle, parentB.velocity().len());
 				tempVecB.trns(angle, Math.max(parentB.velocity().len(), this.velocity().len()));
 				
-				vel.add(tempVecB.x * Time.delta(), tempVecB.y * Time.delta());
+				vel.add(tempVecB.x * Math.min(Core.graphics.getDeltaTime() * 60, 3), tempVecB.y * Math.min(Core.graphics.getDeltaTime() * 60, 3));
 				if(Mathf.within(this.x + vel.x, this.y + vel.y, parentB.x, parentB.y, segmentOffset)){
 					this.moveBy(-tempVec.x / 1.1, -tempVec.y / 1.1);
 				};
@@ -661,7 +661,7 @@ const scourgeSegment = prov(() => {
 			tempVec.trns(this.rotation, segmentOffset / 2);
 			tempVec.add(this.x, this.y);
 			
-			var dst1 = Mathf.dst(tempVec.x, tempVec.y, tempVecB.x, tempVecB.y) / Time.delta();
+			var dst1 = Mathf.dst(tempVec.x, tempVec.y, tempVecB.x, tempVecB.y) / Math.min(Core.graphics.getDeltaTime() * 60, 3);
 			var angle1 = Angles.angle(tempVec.x, tempVec.y, tempVecB.x, tempVecB.y);
 			
 			tempVec.trns(parentB.velocity().angle() - 180, segmentOffset / 2);
@@ -730,7 +730,7 @@ const scourgeMain = prov(() => {
 				var bulletsCounted = 0;
 				var scanRange = 220;
 				Vars.bulletGroup.intersect(this.x - scanRange, this.y - scanRange, scanRange * 2, scanRange * 2, cons(b => {
-					if(Mathf.within(this.x, this.y, b.x, b.y, scanRange) && b.getTeam() != this.getTeam()){
+					if(Mathf.within(this.x, this.y, b.x, b.y, scanRange) && b.team != this.getTeam()){
 						bulletsCounted += 1;
 					}
 				}));

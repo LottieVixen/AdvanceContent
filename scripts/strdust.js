@@ -26,23 +26,23 @@ const strdustBullet = extend(BasicBulletType, {
 		this.hit(b);
 		if(tile.entity != null){
 			if(tile.entity.health() < tile.entity.maxHealth() * 0.1){
-				tile.setTeam(b.getTeam());
+				tile.setTeam(b.team);
 				if(tile.block() != null){
-					Effects.effect(changeTeamEffect, tile.drawx(), tile.drawy(), tile.block().size);
+					Effect.effect(changeTeamEffect, tile.drawx(), tile.drawy(), tile.block().size);
 				}
 			};
 			//print(tile.entity.health());
 			//print(tile.entity.maxHealth() / 90)
 		}
-		//tile.setTeam(b.getTeam());
+		//tile.setTeam(b.team);
 	},
 	
 	draw: function(b){
 		/*Draw.color(primeColor);
 		Lines.stroke(2);
-		Lines.lineAngleCenter(b.x, b.y, b.rot(), 9);
+		Lines.lineAngleCenter(b.x, b.y, b.vel.angle(), 9);
 		Draw.color(Color.white);
-		Lines.lineAngleCenter(b.x, b.y, b.rot(), 4);
+		Lines.lineAngleCenter(b.x, b.y, b.vel.angle(), 4);
 		Draw.reset();*/
 		
 		const lengthB = 8;
@@ -52,15 +52,15 @@ const strdustBullet = extend(BasicBulletType, {
 		const lenscales = [1.0, 1.61, 1.97];
 		const tmpColor = new Color();
 
-		//Lines.lineAngle(b.x, b.y, b.rot(), baseLen);
+		//Lines.lineAngle(b.x, b.y, b.vel.angle(), baseLen);
 		for(var s = 0; s < 3; s++){
 			//Draw.color(colors[s]);
-			Draw.color(tmpColor.set(colors[s]).mul(1.0 + Mathf.absin(Time.time(), 1.5, 0.1)));
+			Draw.color(tmpColor.set(colors[s]).mul(1.0 + Mathf.absin(Time.time, 1.5, 0.1)));
 			for(var i = 0; i < 3; i++){
-				Lines.stroke((3 + Mathf.absin(Time.time(), 3.2, 1)) * strokes[s] * tscales[i]);
-				Tmp.v1.trns(b.rot() + 180, lengthB * lenscales[i] / 2);
-				//Lines.lineAngleCenter(b.x, b.y, b.rot(), 5 * lenscales[i]);
-				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.rot(), lengthB * lenscales[i], CapStyle.none);
+				Lines.stroke((3 + Mathf.absin(Time.time, 3.2, 1)) * strokes[s] * tscales[i]);
+				Tmp.v1.trns(b.vel.angle() + 180, lengthB * lenscales[i] / 2);
+				//Lines.lineAngleCenter(b.x, b.y, b.vel.angle(), 5 * lenscales[i]);
+				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.vel.angle(), lengthB * lenscales[i], false);
 			}
 		};
 		Draw.reset();
@@ -110,10 +110,10 @@ const strdust = extendContent(Mech, "stardust-corruptor", {
 			const size = (this.engineSize * 1.5) * player.boostHeat;
 			var sn = Mathf.signs[i];
 			vectA.trns(player.rotation - 90, 9.5 * sn, -3.75 + (shift * 2));
-			Effects.effect(shipTrail, player.x + vectA.x, player.y + vectA.y, (size + Mathf.absin(Time.time(), 2, size / 4)) / 2);
+			Effect.effect(shipTrail, player.x + vectA.x, player.y + vectA.y, (size + Mathf.absin(Time.time, 2, size / 4)) / 2);
 		};
 		vectA.trns(player.rotation + 90, 0, this.engineOffset - (shift * 2));
-		Effects.effect(shipTrail, player.x + vectA.x, player.y + vectA.y, (size + Mathf.absin(Time.time(), 2, size / 4)) / 2);
+		Effect.effect(shipTrail, player.x + vectA.x, player.y + vectA.y, (size + Mathf.absin(Time.time, 2, size / 4)) / 2);
 	},
 	
 	draw: function(player){
@@ -121,7 +121,7 @@ const strdust = extendContent(Mech, "stardust-corruptor", {
 		const health = player.healthf();
 		for(var i = 0; i < 2; i++){
 			const size = (this.engineSize * 1.5) * player.boostHeat;
-			const sizeB = (size + Mathf.absin(Time.time(), 2, size / 4)) / 2;
+			const sizeB = (size + Mathf.absin(Time.time, 2, size / 4)) / 2;
 			const shift = Mathf.clamp(player.velocity().len(), 0, 2);
 			var sn = Mathf.signs[i];
 			vectA.trns(player.rotation - 90, 9.5 * sn, -3.75);
@@ -134,7 +134,7 @@ const strdust = extendContent(Mech, "stardust-corruptor", {
 			Fill.circle(player.x + vectA.x, player.y + vectA.y, sizeB / 1.7);
 		};
 		
-		Draw.color(Color.black, Color.white, health + Mathf.absin(Time.time(), health * 5.0, 1.0 - health));
+		Draw.color(Color.black, Color.white, health + Mathf.absin(Time.time, health * 5.0, 1.0 - health));
 		Draw.blend(Blending.additive);
 		Draw.rect(this.lightRegion, player.x, player.y, player.rotation - 90);
 		Draw.blend();

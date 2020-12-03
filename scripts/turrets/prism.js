@@ -1,6 +1,6 @@
 const prHitEffect = newEffect(16, e => {
 	Draw.blend(Blending.additive);
-	Draw.color(Color.valueOf("ff0000ff").shiftHue(Time.time() * 2.0));
+	Draw.color(Color.valueOf("ff0000ff").shiftHue(Time.time * 2.0));
 	Lines.stroke(e.fout() * 1.5);
 	
 	const hl = new Floatc2({get: function(x, y){
@@ -16,9 +16,9 @@ const prHitEffect = newEffect(16, e => {
 
 const prismBullet = extend(BasicBulletType, {
 	update: function(b){
-		Effects.shake(0.1, 0.1, b.x, b.y);
+		Effect.shake(0.1, 0.1, b.x, b.y);
 		if(b.timer.get(1, 5)){
-			Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), this.laserLength, false);
+			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), this.laserLength, false);
 		};
 	},
 	
@@ -35,11 +35,11 @@ const prismBullet = extend(BasicBulletType, {
 		const tmpColor = new Color();
 		
 		Draw.blend(Blending.additive);
-		Draw.color(tmpColor.set(Color.valueOf("ff0000")).shiftHue(b.getData() + (Time.time() * 2.0)));
+		Draw.color(tmpColor.set(Color.valueOf("ff0000")).shiftHue(b.getData() + (Time.time * 2.0)));
 		for(var i = 0; i < 4; i++){
-			Tmp.v1.trns(b.rot() + 180.0, (lenscales[i] - 0.9) * 55.0);
-			Lines.stroke((9 + Mathf.absin(Time.time(), 1.7, 3.1)) * b.fout() * width * tscales[i]);
-			Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.rot(), (this.laserLength * lenscales[i]), CapStyle.none);
+			Tmp.v1.trns(b.vel.angle() + 180.0, (lenscales[i] - 0.9) * 55.0);
+			Lines.stroke((9 + Mathf.absin(Time.time, 1.7, 3.1)) * b.fout() * width * tscales[i]);
+			Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.vel.angle(), (this.laserLength * lenscales[i]), false);
 		};
 		Draw.reset();
 		Draw.blend();
@@ -90,7 +90,7 @@ const prism = extendContent(PowerTurret, "prism", {
 		
 		Draw.blend(Blending.additive);
 		for(var h = 0; h < 16; h++){
-			Draw.color(Color.valueOf("ff0000").shiftHue((Time.time() * 2.0) + (h * (360 / 16))));
+			Draw.color(Color.valueOf("ff0000").shiftHue((Time.time * 2.0) + (h * (360 / 16))));
 			Draw.rect(this.rainbowRegions[h], tile.drawx() + this.tr2.x, tile.drawy() + this.tr2.y, entity.rotation - 90);
 		};
 		Draw.blend();
@@ -121,14 +121,14 @@ const prism = extendContent(PowerTurret, "prism", {
 			
 			var shakeB = Mathf.clamp(1 - entity.getBulletHeat()) * 2.1;
 			
-			Effects.shake(shakeB, shakeB, tile.drawx(), tile.drawy());
+			Effect.shake(shakeB, shakeB, tile.drawx(), tile.drawy());
 			
 			entity.heat = 1;
 			entity.recoil = (1 - entity.getBulletHeat()) * this.recoil;
-			entity.setBulletTime(entity.getBulletTime() + Time.delta());
-			//entity.bulletLife -= Time.delta();
-			//entity.setBulletLife(entity.getBulletLife() - (Time.delta() * ((1 * this.overdriveStrength) / (entity.timeScale * this.overdriveStrength))));
-			entity.setBulletLife(entity.getBulletLife() - (Time.delta() * ((1 * this.overdriveStrength) / (this.overdriveStrength + (entity.timeScale - 1)))));
+			entity.setBulletTime(entity.getBulletTime() + Math.min(Core.graphics.getDeltaTime() * 60, 3));
+			//entity.bulletLife -= Math.min(Core.graphics.getDeltaTime() * 60, 3);
+			//entity.setBulletLife(entity.getBulletLife() - (Math.min(Core.graphics.getDeltaTime() * 60, 3) * ((1 * this.overdriveStrength) / (entity.timeScale * this.overdriveStrength))));
+			entity.setBulletLife(entity.getBulletLife() - (Math.min(Core.graphics.getDeltaTime() * 60, 3) * ((1 * this.overdriveStrength) / (this.overdriveStrength + (entity.timeScale - 1)))));
 			if(entity.getBulletLife() <= 0){
 				this.clearLasers(tile);
 				entity.setBulletHeat(0);
@@ -136,7 +136,7 @@ const prism = extendContent(PowerTurret, "prism", {
 			}
 		};
 		
-		//entity.setBulletTime(entity.getBulletTime() + Time.delta());
+		//entity.setBulletTime(entity.getBulletTime() + Math.min(Core.graphics.getDeltaTime() * 60, 3));
 		entity.setBulletHeat(Mathf.lerpDelta(entity.getBulletHeat(), 0, this.fade));
 	},
 	
@@ -165,12 +165,12 @@ const prism = extendContent(PowerTurret, "prism", {
 			liquid = entity.liquids.current();
 			maxUsed = this.consumes.get(ConsumeType.liquid).amount;
 			
-			used = this.baseReloadSpeed(tile) * (tile.isEnemyCheat() ? maxUsed : Math.min(entity.liquids.get(liquid), maxUsed * Time.delta())) * liquid.heatCapacity * this.coolantMultiplier;
-			entity.reload += Math.max(used, 1 * Time.delta()) * entity.power.status;
+			used = this.baseReloadSpeed(tile) * (tile.isEnemyCheat() ? maxUsed : Math.min(entity.liquids.get(liquid), maxUsed * Math.min(Core.graphics.getDeltaTime() * 60, 3))) * liquid.heatCapacity * this.coolantMultiplier;
+			entity.reload += Math.max(used, 1 * Math.min(Core.graphics.getDeltaTime() * 60, 3)) * entity.power.status;
 			entity.liquids.remove(liquid, used);
 			
 			if(Mathf.chance(0.06 * used)){
-				Effects.effect(this.coolEffect, tile.drawx() + Mathf.range(this.size * Vars.tilesize / 2), tile.drawy() + Mathf.range(this.size * Vars.tilesize / 2));
+				Effect.effect(this.coolEffect, tile.drawx() + Mathf.range(this.size * Vars.tilesize / 2), tile.drawy() + Mathf.range(this.size * Vars.tilesize / 2));
 			}
 		}
 	},

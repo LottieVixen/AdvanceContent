@@ -75,7 +75,7 @@ const omniTurret = extendContent(ItemTurret, "omniturret", {
 							}
 						};
 						
-						if(type.status != null && type.status != StatusEffects.none){
+						if(type.status != null && type.status != StatusEffect.none){
 							if(!Vars.android){
 								var statusName = type.status.name.toString();
 								var shouldUpperCase = true;
@@ -143,12 +143,12 @@ const omniTurret = extendContent(ItemTurret, "omniturret", {
 			bType.bulletShrink = 0;
 			bType.reloadMultiplier = 1 / Math.max(1, itemScore / (17 * Math.max(1, itemScore / 24)));
 			if(itemType.radioactivity > 0.6){
-				bType.status = StatusEffects.corroded;
+				bType.status = StatusEffect.corroded;
 				bType.statusDuration = itemScore * 3;
 			};
 			
 			if(itemType.flammability > 0.53){
-				bType.status = StatusEffects.burning;
+				bType.status = StatusEffect.burning;
 				bType.statusDuration = itemType.flammability * 60;
 				bType.backColor = Pal.lightOrange;
 				bType.frontColor = Pal.lightishOrange;

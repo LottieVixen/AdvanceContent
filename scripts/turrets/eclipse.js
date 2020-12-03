@@ -22,11 +22,11 @@ const eclipseHit = newEffect(15, e => {
 const eclipseBullet = extend(BasicBulletType, {
 	update: function(b){
 		const trnsb = new Vec2();
-		Effects.shake(1.2, 1.2, b.x, b.y);
+		Effect.shake(1.2, 1.2, b.x, b.y);
 		
 		if(b.timer.get(1, 5) && b.getData() != null){
 			b.getData()[1] = true;
-			Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), Math.min(this.lengthB, b.getData()[0]), true);
+			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), Math.min(this.lengthB, b.getData()[0]), true);
 			//b.getData()[1] = true;
 		};
 	},
@@ -34,7 +34,7 @@ const eclipseBullet = extend(BasicBulletType, {
 	hit: function(b, hitx, hity){
 		if(hitx != null && hity != null && b.getData() != null && b.getData()[1]){
 			//var angle = Angles.angle(b.x, b.y, hitx, hity);
-			Effects.effect(this.hitEffect, hitx, hity, b.rot());
+			Effect.effect(this.hitEffect, hitx, hity, b.vel.angle());
 			len = Mathf.dst(b.x, b.y, hitx, hity);
 			b.getData()[0] = len;
 			b.getData()[1] = false;
@@ -54,11 +54,11 @@ const eclipseBullet = extend(BasicBulletType, {
 		const tmpColor = new Color();
 
 		for(var s = 0; s < 4; s++){
-			Draw.color(tmpColor.set(colors[s]).mul(1.0 + Mathf.absin(Time.time(), 1.2, 0.4)));
+			Draw.color(tmpColor.set(colors[s]).mul(1.0 + Mathf.absin(Time.time, 1.2, 0.4)));
 			for(var i = 0; i < 4; i++){
-				Tmp.v1.trns(b.rot() + 180.0, (lenscales[i] - 0.8) * 55.0);
-				Lines.stroke((9 + Mathf.absin(Time.time(), 1.7, 3.1)) * b.fout() * strokes[s] * tscales[i]);
-				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.rot(), (Math.min(this.lengthB, b.getData()[0]) * lenscales[i]) * 1.12, CapStyle.none);
+				Tmp.v1.trns(b.vel.angle() + 180.0, (lenscales[i] - 0.8) * 55.0);
+				Lines.stroke((9 + Mathf.absin(Time.time, 1.7, 3.1)) * b.fout() * strokes[s] * tscales[i]);
+				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.vel.angle(), (Math.min(this.lengthB, b.getData()[0]) * lenscales[i]) * 1.12, false);
 			}
 		};
 		Draw.reset();
@@ -114,24 +114,24 @@ const eclipse = extendContent(PowerTurret, "eclipse", {
 			entBullet.set(tile.drawx() + this.tr.x, tile.drawy() + this.tr.y);
 			entBullet.time(0);
 			if(entBullet.getData() != null){
-				//var bulletLength = entBullet.getData()[0] + (this.growthSpeed * Time.delta());
+				//var bulletLength = entBullet.getData()[0] + (this.growthSpeed * Math.min(Core.graphics.getDeltaTime() * 60, 3));
 				//var bulletBool = entBullet.getData()[1];
 				//var data = [bulletLength, bulletBool];
 				
 				if(entBullet.getData()[1]){
 					entity.setBulletHeat(Mathf.lerp(entity.getBulletHeat(), 1, 0.09));
-					entBullet.getData()[0] = entBullet.getData()[0] + ((this.growthSpeed * Time.delta()) * entity.getBulletHeat());
+					entBullet.getData()[0] = entBullet.getData()[0] + ((this.growthSpeed * Math.min(Core.graphics.getDeltaTime() * 60, 3)) * entity.getBulletHeat());
 				}else{
 					entity.setBulletHeat(Mathf.lerp(entity.getBulletHeat(), 0, 0.18));
 				};
 				
-				//entBullet.setData(entBullet.getData() + (this.growthSpeed * Time.delta()));
+				//entBullet.setData(entBullet.getData() + (this.growthSpeed * Math.min(Core.graphics.getDeltaTime() * 60, 3)));
 				//entBullet.setData(data);
 			};
 			entity.heat = 1;
 			entity.recoil = this.recoil;
-			//entity.bulletLife -= Time.delta();
-			entity.setBulletLife(entity.getBulletLife() - Time.delta());
+			//entity.bulletLife -= Math.min(Core.graphics.getDeltaTime() * 60, 3);
+			entity.setBulletLife(entity.getBulletLife() - Math.min(Core.graphics.getDeltaTime() * 60, 3));
 			if(entity.getBulletLife() <= 0){
 				entity.setBullet(null);
 			}
@@ -155,15 +155,15 @@ const eclipse = extendContent(PowerTurret, "eclipse", {
 			liquid = entity.liquids.current();
 			maxUsed = this.consumes.get(ConsumeType.liquid).amount;
 			
-			used = this.baseReloadSpeed(tile) * (tile.isEnemyCheat() ? maxUsed : Math.min(entity.liquids.get(liquid), maxUsed * Time.delta())) * liquid.heatCapacity * this.coolantMultiplier;
-			//used = Math.min(Math.min(entity.liquids.get(liquid), maxUsed * Time.delta()), Math.max(0, ((this.reload - entity.reload) / this.coolantMultiplier) / liquid.heatCapacity)) * this.baseReloadSpeed(tile);
+			used = this.baseReloadSpeed(tile) * (tile.isEnemyCheat() ? maxUsed : Math.min(entity.liquids.get(liquid), maxUsed * Math.min(Core.graphics.getDeltaTime() * 60, 3))) * liquid.heatCapacity * this.coolantMultiplier;
+			//used = Math.min(Math.min(entity.liquids.get(liquid), maxUsed * Math.min(Core.graphics.getDeltaTime() * 60, 3)), Math.max(0, ((this.reload - entity.reload) / this.coolantMultiplier) / liquid.heatCapacity)) * this.baseReloadSpeed(tile);
 			//entity.reload += used * liquid.heatCapacity * this.coolantMultiplier;
 			//print(used);
-			entity.reload += Math.max(used, 1 * Time.delta()) * entity.power.status;
+			entity.reload += Math.max(used, 1 * Math.min(Core.graphics.getDeltaTime() * 60, 3)) * entity.power.status;
 			entity.liquids.remove(liquid, used);
 			
 			if(Mathf.chance(0.06 * used)){
-				Effects.effect(this.coolEffect, tile.drawx() + Mathf.range(this.size * Vars.tilesize / 2), tile.drawy() + Mathf.range(this.size * Vars.tilesize / 2));
+				Effect.effect(this.coolEffect, tile.drawx() + Mathf.range(this.size * Vars.tilesize / 2), tile.drawy() + Mathf.range(this.size * Vars.tilesize / 2));
 			}
 		}
 	},

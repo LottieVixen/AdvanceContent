@@ -1,7 +1,7 @@
 const protLightning = extend(BasicBulletType, {
 	update: function(b){
 		if(b.timer.get(0, 2)){
-			Lightning.create(b.getTeam(), Color.valueOf("a9d8ff"), 18, b.x, b.y, Mathf.random(360), Mathf.random(4, 16));
+			Lightning.create(b.team, Color.valueOf("a9d8ff"), 18, b.x, b.y, Mathf.random(360), Mathf.random(4, 16));
 		}
 	},
 	
@@ -47,12 +47,12 @@ const protBullet = extend(ArtilleryBulletType, {
 	update: function(b){
 
 		if(b.timer.get(0, 2 + b.fslope() * 1.5)){
-			Effects.effect(this.trailEffect, this.backColor, b.x, b.y, b.fslope() * 4);
+			Effect.effect(this.trailEffect, this.backColor, b.x, b.y, b.fslope() * 4);
 		}
 	},
 	
 	/*hit: function(b, x, y){
-		Effects.effect(this.hitEffect, x, y, b.rot());
+		Effect.effect(this.hitEffect, x, y, b.vel.angle());
 		for(var a; a < this.fragBullets; a++){
 			Lightning.create(b.getTeam, Color.valueOf("a9d8ff"), 18, b.x, b.y, Mathf.random(360), Mathf.random(4, 16));
 		}

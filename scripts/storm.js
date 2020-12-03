@@ -196,7 +196,7 @@ const stormMain = prov(() => {
 			for(var m = totalSegments - 1; m > -1; m--){
 				var tmpB = this.getSegments()[0];
 				
-				/*Draw.color(Color.black, this.getTeam().color, this.healthf() + Mathf.absin(Time.time(), Math.max(this.healthf() * 5, 1), 1 - this.healthf()));
+				/*Draw.color(Color.black, this.getTeam().color, this.healthf() + Mathf.absin(Time.time, Math.max(this.healthf() * 5, 1), 1 - this.healthf()));
 				Draw.rect(this.getPowerCellRegion(), tmpB[m].x, tmpB[m].y, this.rotation - 90);
 				Draw.color();*/
 				
@@ -207,7 +207,7 @@ const stormMain = prov(() => {
 				Draw.rect(region, tmpB[m].x, tmpB[m].y, angleC - 90);
 				Draw.mixcol();
 				
-				Draw.color(Color.black, this.getTeam().color, this.healthf() + Mathf.absin(Time.time(), Math.max(this.healthf() * 5, 1), 1 - this.healthf()));
+				Draw.color(Color.black, this.getTeam().color, this.healthf() + Mathf.absin(Time.time, Math.max(this.healthf() * 5, 1), 1 - this.healthf()));
 				Draw.rect(this.getPowerCellRegion(), tmpB[m].x, tmpB[m].y, angleC - 90);
 				Draw.color();
 			};
@@ -237,7 +237,7 @@ const stormMain = prov(() => {
 			this.item.amount = tmpAmount;
 			
 			this.velocity().limit(this.maxVelocity());
-			this.velocity().scl((1 + (this.status.getSpeedMultiplier() - 1)) * Time.delta());
+			this.velocity().scl((1 + (this.status.getSpeedMultiplier() - 1)) * Math.min(Core.graphics.getDeltaTime() * 60, 3));
 			
 			this.updateSegmentVelocity();
 			
@@ -252,7 +252,7 @@ const stormMain = prov(() => {
 						Tmp.v1.set(this);
 						Tmp.v1.sub(spawn.worldx(), spawn.worldy());
 						Tmp.v1.setLength(0.1 + 1 - this.dst(spawn) / relativeSize);
-						Tmp.v1.scl(0.45 * Time.delta());
+						Tmp.v1.scl(0.45 * Math.min(Core.graphics.getDeltaTime() * 60, 3));
 						this.velocity().add(Tmp.v1);
 						Tmp.v1.setZero();
 					}
@@ -267,16 +267,16 @@ const stormMain = prov(() => {
 			if(this.y > Vars.world.unitHeight()) this.velocity().y -= ((this.y - Vars.world.unitHeight()) / warpDst);
 			
 			this.drownTime = 0;
-			this.move(this.velocity().x * Time.delta(), this.velocity().y * Time.delta());
+			this.move(this.velocity().x * Math.min(Core.graphics.getDeltaTime() * 60, 3), this.velocity().y * Math.min(Core.graphics.getDeltaTime() * 60, 3));
 			
-			this.velocity().scl(Mathf.clamp(1 - this.drag() * Time.delta()));
+			this.velocity().scl(Mathf.clamp(1 - this.drag() * Math.min(Core.graphics.getDeltaTime() * 60, 3)));
 		},
 		
 		updateSegmentVelocity(){
 			for(var j = 0; j < totalSegments; j++){
 				var tmpC = this.getSegments()[1];
 				var tmpD = this.getSegments()[0];
-				//tmpC[j].limit(this.maxVelocity()).scl((1 + (this.status.getSpeedMultiplier() - 1)) * Time.delta());
+				//tmpC[j].limit(this.maxVelocity()).scl((1 + (this.status.getSpeedMultiplier() - 1)) * Math.min(Core.graphics.getDeltaTime() * 60, 3));
 				tmpC[j].limit(this.maxVelocity());
 				//tmpC[j].scl((1 + (this.status.getSpeedMultiplier() - 1)));
 				var angleB = j != 0 ? Angles.angle(tmpD[j].x, tmpD[j].y, tmpD[j - 1].x, tmpD[j - 1].y) : angleB = Angles.angle(tmpD[j].x, tmpD[j].y, this.x, this.y);
@@ -303,7 +303,7 @@ const stormMain = prov(() => {
 							Tmp.v1.set(tmpD[j].x, tmpD[j].y);
 							Tmp.v1.sub(spawn.worldx(), spawn.worldy());
 							Tmp.v1.setLength(0.1 + 1 - this.dst(spawn) / relativeSize);
-							Tmp.v1.scl(0.45 * Time.delta());
+							Tmp.v1.scl(0.45 * Math.min(Core.graphics.getDeltaTime() * 60, 3));
 							tmpC[j].add(Tmp.v1);
 							Tmp.v1.setZero();
 						}
@@ -314,7 +314,7 @@ const stormMain = prov(() => {
 			//applies time delta scale.
 			for(var p = 0; p < totalSegments; p++){
 				var tmpC = this.getSegments()[1];
-				tmpC[p].scl((1 + (this.status.getSpeedMultiplier() - 1)) * Time.delta());
+				tmpC[p].scl((1 + (this.status.getSpeedMultiplier() - 1)) * Math.min(Core.graphics.getDeltaTime() * 60, 3));
 			};
 		},
 		
@@ -346,7 +346,7 @@ const stormMain = prov(() => {
 				tmpC.add(vel);
 				var angleD = h == 0 ? Angles.angle(tmpC.x, tmpC.y, this.x, this.y) : Angles.angle(tmpC.x, tmpC.y, this.getSegments()[0][h - 1].x, this.getSegments()[0][h - 1].y);
 				tmpQ.velocity().set(vel);
-				vel.scl(Mathf.clamp(1 - this.drag() * Time.delta()));
+				vel.scl(Mathf.clamp(1 - this.drag() * Math.min(Core.graphics.getDeltaTime() * 60, 3)));
 				tmpQ.set(tmpC.x, tmpC.y);
 				tmpQ.rotation = angleD;
 				tmpQ.updateCustom();

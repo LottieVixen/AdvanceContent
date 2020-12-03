@@ -18,7 +18,7 @@ const ephLaserEffect = elib.newEffectWDraw(19, 100, e => {
 	//Fill.circle(x, y, stroke * 2 * e.fout());
 	if(pos1 != null){
 		Lines.stroke(stroke * 2 * e.fout());
-		Lines.line(pos1.x, pos1.y, x, y, CapStyle.none);
+		Lines.line(pos1.x, pos1.y, x, y, false);
 		Draw.reset();
 		Draw.blend();
 	}
@@ -114,10 +114,10 @@ const positive = extend(BasicBulletType, {
 			var medianX = (b.x + c.x) / 2;
 			var medianY = (b.y + c.y) / 2;
 			
-			var angleBullet = ((c.rot() % 360) + (b.rot() % 360)) / 2;
+			var angleBullet = ((c.rot() % 360) + (b.vel.angle() % 360)) / 2;
 			
-			Effects.effect(ephHitEffect, medianX, medianY, angleBullet);
-			Damage.damage(b.getTeam(), medianX, medianY, 45, 80);
+			Effect.effect(ephHitEffect, medianX, medianY, angleBullet);
+			Damage.damage(b.team, medianX, medianY, 45, 80);
 		};
 		rectA.set(0,0,0,0);
 		rectB.set(0,0,0,0);
@@ -160,10 +160,10 @@ const ephemeronBullet = extend(BasicBulletType, {
 			var rangeRandom = Mathf.range(40, 70);
 			
 			tmpVec2.trns(angleRandom, rangeRandom);
-			var bulletA = Bullet.create(positive, b.getOwner(), b.getTeam(), pointX + tmpVec2.x, pointY + tmpVec2.y, angleRandom + randomSign);
+			var bulletA = Bullet.create(positive, b.getOwner(), b.team, pointX + tmpVec2.x, pointY + tmpVec2.y, angleRandom + randomSign);
 			
 			tmpVec2.trns(angleRandom + 180, rangeRandom);
-			var bulletB = Bullet.create(negative, b.getOwner(), b.getTeam(), pointX + tmpVec2.x, pointY + tmpVec2.y, angleRandom + randomSign + 180);
+			var bulletB = Bullet.create(negative, b.getOwner(), b.team, pointX + tmpVec2.x, pointY + tmpVec2.y, angleRandom + randomSign + 180);
 			
 			bulletA.setData(bulletB);
 			bulletB.setData(bulletA);
@@ -176,11 +176,11 @@ const ephemeronBullet = extend(BasicBulletType, {
 			
 			var data = [bulletA, b.x, b.y];
 			
-			Effects.effect(ephLaserEffect, b.x, b.y, 0, data);
+			Effect.effect(ephLaserEffect, b.x, b.y, 0, data);
 			
 			var datab = [bulletB, b.x, b.y];
 			
-			Effects.effect(ephLaserEffect, b.x, b.y, 0, datab);
+			Effect.effect(ephLaserEffect, b.x, b.y, 0, datab);
 		}
 	}
 });
@@ -263,14 +263,14 @@ const ephemeron = extendContent(PowerTurret, "ephemeron", {
 		this.super$update(tile);
 		
 		if(entity.target == null){
-			entity.setTargetTime(entity.getTargetTime() + Time.delta());
+			entity.setTargetTime(entity.getTargetTime() + Math.min(Core.graphics.getDeltaTime() * 60, 3));
 		}else{
 			entity.setTargetTime(0);
 		};
 		
 		if(entity.getTargetTime() > 60 || power < 0.0001){
 			//entity.setFrame(Mathf.lerpDelta(entity.getFrame(), 0, 0.06));
-			entity.setFrame(entity.getFrame() - (Time.delta() / 3));
+			entity.setFrame(entity.getFrame() - (Math.min(Core.graphics.getDeltaTime() * 60, 3) / 3));
 			entity.setFrame(Mathf.clamp(entity.getFrame(), 0, this.animationRegions.length));
 			entity.setTargetTime(60);
 		};
@@ -289,7 +289,7 @@ const ephemeron = extendContent(PowerTurret, "ephemeron", {
 
 			//entity.reload = 0;
 			
-			entity.setChargeTime(entity.getChargeTime() + Time.delta());
+			entity.setChargeTime(entity.getChargeTime() + Math.min(Core.graphics.getDeltaTime() * 60, 3));
 			if(entity.getChargeTime() >= this.chargeTime){
 				//type = this.peekAmmo(tile);
 				this.shoot(tile, type);
@@ -303,12 +303,12 @@ const ephemeron = extendContent(PowerTurret, "ephemeron", {
 
 			liquid = entity.liquids.current();
 
-			used = Math.min(Math.min(entity.liquids.get(liquid), maxUsed * Time.delta()), Math.max(0, ((this.reload - entity.reload) / this.coolantMultiplier) / liquid.heatCapacity)) * this.baseReloadSpeed(tile);
+			used = Math.min(Math.min(entity.liquids.get(liquid), maxUsed * Math.min(Core.graphics.getDeltaTime() * 60, 3)), Math.max(0, ((this.reload - entity.reload) / this.coolantMultiplier) / liquid.heatCapacity)) * this.baseReloadSpeed(tile);
 			entity.reload += used * liquid.heatCapacity * this.coolantMultiplier;
 			entity.liquids.remove(liquid, used);
 
 			if(Mathf.chance(0.06 * used)){
-				Effects.effect(this.coolEffect, tile.drawx() + Mathf.range(this.size * Vars.tilesize / 2), tile.drawy() + Mathf.range(this.size * Vars.tilesize / 2));
+				Effect.effect(this.coolEffect, tile.drawx() + Mathf.range(this.size * Vars.tilesize / 2), tile.drawy() + Mathf.range(this.size * Vars.tilesize / 2));
 			}
 		};
 		
@@ -316,7 +316,7 @@ const ephemeron = extendContent(PowerTurret, "ephemeron", {
 		
 		if(power > 0.0001){
 			//entity.setFrame(Mathf.lerpDelta(entity.getFrame(), this.animationRegions.length, 0.06 * power));
-			entity.setFrame(entity.getFrame() + (Time.delta() / 3));
+			entity.setFrame(entity.getFrame() + (Math.min(Core.graphics.getDeltaTime() * 60, 3) / 3));
 			entity.setFrame(Mathf.clamp(entity.getFrame(), 0, this.animationRegions.length));
 		}
 	},

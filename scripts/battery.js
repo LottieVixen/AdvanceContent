@@ -5,7 +5,7 @@ const shrapnel = extend(BasicBulletType, {
 		var region = Core.atlas.find("advancecontent-shrapnel-" + random);
 		
 		Draw.mixcol(Color.valueOf("f8c266"), b.fout());
-		Draw.rect(region, b.x, b.y, b.rot() * randRot);
+		Draw.rect(region, b.x, b.y, b.vel.angle() * randRot);
 		Draw.reset();
 	}
 });
@@ -96,7 +96,7 @@ const legacyBat = extendContent(GenericCrafter, "legacy-battery", {
 		
 		var powerB = (entity.power.status * this.powerBuffered);
 		//var inB = Mathf.clamp(entity.power.status * 10);
-		//var inC = Interpolation.pow2.apply(Interpolation.pow2Out.apply(inB));
+		//var inC = Interp.pow2.apply(Interp.pow2Out.apply(inB));
 		
 		if(entity.power.status > 0.000001){
 			entity.warmup = Mathf.lerpDelta(entity.warmup, 1, 0.06);
@@ -113,7 +113,7 @@ const legacyBat = extendContent(GenericCrafter, "legacy-battery", {
 		
 		var data = [1 - entity.power.status, Mathf.clamp(entity.power.status * 1000)];
 		
-		if(powerB > 0.01) Effects.effect(lightTrail, tile.drawx(), tile.drawy(), entity.totalProgress, data);
+		if(powerB > 0.01) Effect.effect(lightTrail, tile.drawx(), tile.drawy(), entity.totalProgress, data);
 		
 		entity.totalProgress += strength * entity.delta();
 		
@@ -132,7 +132,7 @@ const legacyBat = extendContent(GenericCrafter, "legacy-battery", {
 			RubbleDecal.create(tile.drawx(), tile.drawy(), this.size);
 		};
 		
-		var interp = Interpolation.pow2InInverse.apply(entity.power.status);
+		var interp = Interp.pow2InInverse.apply(entity.power.status);
 		
 		if(entity.power.status > 0.00001){
 			for(var i = 0; i < 18; i++){

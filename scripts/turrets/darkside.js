@@ -24,8 +24,8 @@ const blendCustomA = [Gl.srcAlphaSaturate, Gl.oneMinusSrcAlpha];
 const darksideLaser = extend(BasicBulletType, {
 	update(b){
 		if(b.timer.get(1, 5)){
-			Units.nearbyEnemies(b.getTeam(), b.x - this.effectArea, b.y - this.effectArea, this.effectArea * 2, this.effectArea * 2, cons(unit => {
-				if(unit.within(b, this.effectArea + (unit.getSize() / 2)) && Angles.within(b.rot(), Angles.angle(b.x, b.y, unit.x, unit.y), this.areaAngle)){
+			Units.nearbyEnemies(b.team, b.x - this.effectArea, b.y - this.effectArea, this.effectArea * 2, this.effectArea * 2, cons(unit => {
+				if(unit.within(b, this.effectArea + (unit.getSize() / 2)) && Angles.within(b.vel.angle(), Angles.angle(b.x, b.y, unit.x, unit.y), this.areaAngle)){
 					unit.applyEffect(darksideTrans, 3 * 60);
 					unit.damage(this.damage);
 				}
@@ -44,12 +44,12 @@ const darksideLaser = extend(BasicBulletType, {
 		for(var i = 0; i < 19; i++){
 			/*for(var s = 0; s < 2; s++){
 				var cVec = s == 0 ? tempVec : tempVec2;
-				cVec.trns((b.rot() - this.areaAngle) + ((this.areaAngle / 6) * (i + s)), this.effectArea);
+				cVec.trns((b.vel.angle() - this.areaAngle) + ((this.areaAngle / 6) * (i + s)), this.effectArea);
 			};*/
 			var angA = this.areaAngle * 2 * b.fout();
-			tempVec.trns((b.rot() - (angA / 2)) + ((angA / 19) * (i + 0)), this.effectArea);
-			tempVec2.trns((b.rot() - (angA / 2)) + ((angA / 19) * (i + 1)), this.effectArea);
-			Draw.color(tempColor.set(1, 0, 0, 1).shiftHue(((Time.time() + ((slope(i / 18) * 90) * b.fout())) * 4.3) / 2));
+			tempVec.trns((b.vel.angle() - (angA / 2)) + ((angA / 19) * (i + 0)), this.effectArea);
+			tempVec2.trns((b.vel.angle() - (angA / 2)) + ((angA / 19) * (i + 1)), this.effectArea);
+			Draw.color(tempColor.set(1, 0, 0, 1).shiftHue(((Time.time + ((slope(i / 18) * 90) * b.fout())) * 4.3) / 2));
 			Fill.tri(b.x, b.y, b.x + tempVec.x, b.y + tempVec.y, b.x + tempVec2.x, b.y + tempVec2.y);
 			Draw.reset();
 		};

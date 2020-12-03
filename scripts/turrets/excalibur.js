@@ -1,12 +1,12 @@
 const excalLaser = extend(BasicBulletType, {
 	update: function(b){
 		if(b.timer.get(1, 17)){
-			Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), 190.0, false);
+			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), 190.0, false);
 		};
 	},
 	
 	/*init: function(b){
-		Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), 190.0);
+		Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), 190.0);
 	},*/
 	
 	draw: function(b){
@@ -17,12 +17,12 @@ const excalLaser = extend(BasicBulletType, {
 		const f = Mathf.curve(b.fin(), 0.0, 0.2);
 		const baseLen = length * f;
 
-		//Lines.lineAngle(b.x, b.y, b.rot(), baseLen);
+		//Lines.lineAngle(b.x, b.y, b.vel.angle(), baseLen);
 		for(var s = 0; s < 3; s++){
 			Draw.color(colors[s]);
 			for(var i = 0; i < 4; i++){
 				Lines.stroke(7 * b.fout() * (s == 0 ? 1.5 : s == 1 ? 1 : 0.3) * tscales[i]);
-				Lines.lineAngle(b.x, b.y, b.rot(), baseLen * lenscales[i]);
+				Lines.lineAngle(b.x, b.y, b.vel.angle(), baseLen * lenscales[i]);
 			}
 		};
 		Draw.reset();

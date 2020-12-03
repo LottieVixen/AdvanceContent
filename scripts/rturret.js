@@ -13,7 +13,7 @@ const rBeamEffect = newEffect(16, e => {
 		Fill.circle(vec.x, vec.y, strokes[s] * 4 * e.fslope());
 	
 		Lines.stroke(strokes[s] * 4 * e.fslope());
-		Lines.line(e.x, e.y, vec.x, vec.y, CapStyle.none);
+		Lines.line(e.x, e.y, vec.x, vec.y, false);
 	};
 	Draw.reset();
 });
@@ -24,30 +24,30 @@ const rScanner = extend(BasicBulletType, {
 		var lastTile;
 		
 		if(b.timer.get(1, 4)){
-			//Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), this.lengthC, false);
+			//Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), this.lengthC, false);
 			for(var i = 0; i < this.searchAccuracy; i++){
-				vec.trns(b.rot(), (this.lengthB / this.searchAccuracy) * i);
+				vec.trns(b.vel.angle(), (this.lengthB / this.searchAccuracy) * i);
 				
 				var tx = b.x + vec.x;
 				var ty = b.y + vec.y;
 				
-				//Effects.effect(Fx.hitLaser, tx, ty);
+				//Effect.effect(Fx.hitLaser, tx, ty);
 				
 				var tile = Vars.world.ltileWorld(tx, ty);
 				
-				//print(tile + Time.time());
+				//print(tile + Time.time);
 				
 				if(tile != null && tile != lastTile && tile.entity != null && !(tile.block() instanceof BuildBlock)){
-					if(tile.getTeam() == b.getTeam() && tile.entity.health() < tile.entity.maxHealth()){
+					if(tile.getTeam() == b.team && tile.entity.health() < tile.entity.maxHealth()){
 						
 						var data = new Vec2(tile.drawx(), tile.drawy());
 						
 						//var dst = Mathf.dst(b.x, b.y, tx, ty);
 						
-						Effects.effect(Fx.healBlockFull, Pal.heal, tile.drawx(), tile.drawy(), tile.block().size);
+						Effect.effect(Fx.healBlockFull, Pal.heal, tile.drawx(), tile.drawy(), tile.block().size);
 						tile.entity.healBy((this.healPercent / 100) * tile.entity.maxHealth());
 						
-						Effects.effect(rBeamEffect, b.x, b.y, 0, data);
+						Effect.effect(rBeamEffect, b.x, b.y, 0, data);
 						
 						//print("test2");
 						

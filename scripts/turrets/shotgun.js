@@ -7,7 +7,7 @@ const shotgunBullet = extend(BasicBulletType, {
 		const vel = b.velocity().len() / this.speed;
 		
 		if(b.timer.get(1, 11)){
-			Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), this.rayLength * vel, false);
+			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), this.rayLength * vel, false);
 		};
 	},
 	
@@ -17,13 +17,13 @@ const shotgunBullet = extend(BasicBulletType, {
 		Draw.color(Pal.bulletYellow, Pal.bulletYellowBack, b.fin());
 		
 		/*for(var i = 0; i < 7; i++){
-			Tmp.v1.trns(b.rot(), i * 10);
+			Tmp.v1.trns(b.vel.angle(), i * 10);
 			var sl = Mathf.clamp(b.fout() - 0.5) * (80 - i * 10);
-			Drawf.tri(b.x + Tmp.v1.x, b.y + Tmp.v1.y, 4, sl, b.rot() + 90);
-			Drawf.tri(b.x + Tmp.v1.x, b.y + Tmp.v1.y, 4, sl, b.rot() - 90);
+			Drawf.tri(b.x + Tmp.v1.x, b.y + Tmp.v1.y, 4, sl, b.vel.angle() + 90);
+			Drawf.tri(b.x + Tmp.v1.x, b.y + Tmp.v1.y, 4, sl, b.vel.angle() - 90);
 		}*/
-		Drawf.tri(b.x, b.y, 15 * b.fout(), ((this.rayLength * 1.33) * vel) + 20, b.rot());
-		Drawf.tri(b.x, b.y, 15 * b.fout(), 10, b.rot() + 180);
+		Drawf.tri(b.x, b.y, 15 * b.fout(), ((this.rayLength * 1.33) * vel) + 20, b.vel.angle());
+		Drawf.tri(b.x, b.y, 15 * b.fout(), 10, b.vel.angle() + 180);
 		Draw.reset();
 	}
 });

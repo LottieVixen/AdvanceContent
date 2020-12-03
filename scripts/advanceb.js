@@ -67,17 +67,17 @@ const aaAWall = extendContent(Wall, "active-advance-wall-large", {
 	update(tile){
 		//print("a");
 		entity = tile.ent();
-		if(!(entity.getLevel() >= maxLevel)) entity.setProgress(entity.getProgress() + Time.delta());
+		if(!(entity.getLevel() >= maxLevel)) entity.setProgress(entity.getProgress() + Math.min(Core.graphics.getDeltaTime() * 60, 3));
 		//print(entity + ":" + entity.getLevel() + ":" + entity.getProgress());
 		if(entity.getProgress() > levelUpTime){
 			entity.setLevel(entity.getLevel() + 1);
 			//print(entity + ":" + entity.getLevel());
-			Effects.effect(upgradeEffectAA, tile.drawx(), tile.drawy(), this.size);
+			Effect.effect(upgradeEffectAA, tile.drawx(), tile.drawy(), this.size);
 			entity.setProgress(0);
 		};
 		if(entity.timer.get(this.healTimer, 120) && entity.health() < entity.maxHealth() - 0.0001){
 			entity.healBy(entity.maxHealth() * 0.03);
-			Effects.effect(healEffectAA, tile.drawx(), tile.drawy(), this.size);
+			Effect.effect(healEffectAA, tile.drawx(), tile.drawy(), this.size);
 		}
 	},
 	draw(tile){
@@ -115,17 +115,17 @@ const aaAWallSmall = extendContent(Wall, "active-advance-wall", {
 	},
 	update(tile){
 		entity = tile.ent();
-		if(!(entity.getLevel() >= maxLevel)) entity.setProgress(entity.getProgress() + Time.delta());
+		if(!(entity.getLevel() >= maxLevel)) entity.setProgress(entity.getProgress() + Math.min(Core.graphics.getDeltaTime() * 60, 3));
 		//print(entity + ":" + entity.getLevel() + ":" + entity.getProgress());
 		if(entity.getProgress() > levelUpTime){
 			entity.setLevel(entity.getLevel() + 1);
 			//print(entity + ":" + entity.getLevel());
-			Effects.effect(upgradeEffectAA, tile.drawx(), tile.drawy(), this.size);
+			Effect.effect(upgradeEffectAA, tile.drawx(), tile.drawy(), this.size);
 			entity.setProgress(0);
 		};
 		if(entity.timer.get(this.healTimer, 120) && entity.health() < entity.maxHealth() - 0.0001){
 			entity.healBy(entity.maxHealth() * 0.02);
-			Effects.effect(healEffectAA, tile.drawx(), tile.drawy(), this.size);
+			Effect.effect(healEffectAA, tile.drawx(), tile.drawy(), this.size);
 		}
 	},
 	draw(tile){

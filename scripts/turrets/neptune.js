@@ -77,7 +77,7 @@ const neptune = extendContent(LiquidTurret, "neptune", {
 							}
 						};
 						
-						if(type.status != null && type.status != StatusEffects.none){
+						if(type.status != null && type.status != StatusEffect.none){
 							if(!Vars.android){
 								var statusName = type.status.name.toString();
 								var shouldUpperCase = true;
@@ -155,30 +155,30 @@ const neptune = extendContent(LiquidTurret, "neptune", {
 				tmpBullet.splashDamage = Mathf.clamp((liquid.explosiveness - 0.9) * 10, 0, clampMax / 2);
 			};
 			
-			if(liquid.effect != StatusEffects.none){
+			if(liquid.effect != StatusEffect.none){
 				tmpBullet.status = liquid.effect;
 				tmpBullet.statusDuration = 120;
 			};
 			
-			if(liquid.effect == StatusEffects.none){
+			if(liquid.effect == StatusEffect.none){
 				multiplier = 0.5;
 				if(liquid.temperature > 0.5) multiplier = 1.1;
-				var currentStatus = StatusEffects.none;
+				var currentStatus = StatusEffect.none;
 				
 				tmpBullet.damage = 2 + Math.abs((liquid.temperature - 0.5) * multiplier * 4);
 				
 				if(liquid.viscosity > 0.76){
-					currentStatus = StatusEffects.tarred;
+					currentStatus = StatusEffect.tarred;
 					tmpBullet.statusDuration = (liquid.viscosity - 0.76) * 60;
 				};
 				
 				if(liquid.temperature > 0.85){
-					currentStatus = StatusEffects.melting;
+					currentStatus = StatusEffect.melting;
 					tmpBullet.statusDuration = (liquid.temperature - 0.25) * 60;
 				};
 				
 				if(liquid.temperature < 0.26){
-					currentStatus = StatusEffects.freezing;
+					currentStatus = StatusEffect.freezing;
 					tmpBullet.statusDuration = Math.abs((liquid.temperature - 0.5) * 60);
 				};
 				

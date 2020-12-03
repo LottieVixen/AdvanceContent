@@ -13,8 +13,8 @@ const shootSparks = newEffect(32, e => {
 		var rnd5 = Mathf.randomSeed(e.id + (b * 19), 230, 340) / 15; // 15.33 - 22.33
 		var rndRot = Mathf.randomSeedRange(e.id + (b * 14), 35); // -35 - 35
 		
-		var sin = Mathf.sin(Time.time() + rnd3, rnd1, rnd2);
-		var sinB = Mathf.sin((Time.time() + rnd3) - 45, rnd1, rnd2);
+		var sin = Mathf.sin(Time.time + rnd3, rnd1, rnd2);
+		var sinB = Mathf.sin((Time.time + rnd3) - 45, rnd1, rnd2);
 		
 		//vec.trns(e.rotation + rndRot + (sin / 3), e.finpow() * rnd4 * 3.3, sin * e.fslope());
 		//vec.add(vec2.trns(e.rotation + rndRot + (sin / 3 * e.fout()), e.fout() * rnd4 * 3.3, sin * e.fslope()));
@@ -55,7 +55,7 @@ const solarBullet = extend(BasicBulletType, {
 		this.findSide(b);
 		
 		if(b.timer.get(1, 17)){
-			Damage.collideLine(b, b.getTeam(), Fx.none, b.x, b.y, b.rot(), this.lengthA + 10, false);
+			Damage.collideLine(b, b.team, Fx.none, b.x, b.y, b.vel.angle(), this.lengthA + 10, false);
 		};
 		
 		//this.findSide(b);
@@ -68,7 +68,7 @@ const solarBullet = extend(BasicBulletType, {
 	
 	hit: function(b, hitx, hity){
 		if(hitx != null && hity != null){
-			Effects.effect(Fx.hitMeltdown, Color.valueOf("ec7458aa"), hitx, hity);
+			Effect.effect(Fx.hitMeltdown, Color.valueOf("ec7458aa"), hitx, hity);
 			if(Mathf.chance(0.1)){
 				Fire.create(Vars.world.tileWorld(hitx + Mathf.range(3.0), hity + Mathf.range(3.0)));
 			}
@@ -84,12 +84,12 @@ const solarBullet = extend(BasicBulletType, {
 		var lastX = owner.getX() - b.getX();
 		var lastY = owner.getY() - b.getY();
 		
-		vec.trns(b.rot() * -1, lastX, lastY);
+		vec.trns(b.vel.angle() * -1, lastX, lastY);
 		
 		/*if(vec.x + vec.y > 0){
-			vec2.trns(b.rot() - 90, 14.75, 12);
+			vec2.trns(b.vel.angle() - 90, 14.75, 12);
 		}else{
-			vec2.trns(b.rot() - 90, -14.75, 12);
+			vec2.trns(b.vel.angle() - 90, -14.75, 12);
 		};*/
 		
 		/*vec3.set(owner.pointerX, owner.pointerY).sub(b.x, b.y);
@@ -134,14 +134,14 @@ const solarBullet = extend(BasicBulletType, {
 		const lenscales = [1.0, 1.12, 1.15, 1.159];
 		const tmpColor = new Color();
 
-		//Lines.lineAngle(b.x, b.y, b.rot(), baseLen);
+		//Lines.lineAngle(b.x, b.y, b.vel.angle(), baseLen);
 		for(var s = 0; s < 4; s++){
 			//Draw.color(colors[s]);
-			Draw.color(tmpColor.set(colors[s]).mul(1.0 + Mathf.absin(Time.time(), 1.0, 0.2)));
+			Draw.color(tmpColor.set(colors[s]).mul(1.0 + Mathf.absin(Time.time, 1.0, 0.2)));
 			for(var i = 0; i < 4; i++){
-				Tmp.v1.trns(b.rot() + 180.0, (lenscales[i] - 1.1) * 35.0);
-				Lines.stroke((9 + Mathf.absin(Time.time(), 1.4, 1.5)) * b.fslope() * strokes[s] * tscales[i]);
-				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.rot(), this.lengthA * lenscales[i], CapStyle.none);
+				Tmp.v1.trns(b.vel.angle() + 180.0, (lenscales[i] - 1.1) * 35.0);
+				Lines.stroke((9 + Mathf.absin(Time.time, 1.4, 1.5)) * b.fslope() * strokes[s] * tscales[i]);
+				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.vel.angle(), this.lengthA * lenscales[i], false);
 			}
 		};
 		Draw.reset();
@@ -203,7 +203,7 @@ const solar = extendContent(Mech, "solar-conqueror", {
 		
 		if(player.getTimer().get(5, 1)){
 			vectA.trns(player.velocity().angle() - 90, 0, shift * 2);
-			Effects.effect(shipTrail, player.x + vectA.x + Mathf.range(1.0), player.y + vectA.y + Mathf.range(1.0), player.rotation);
+			Effect.effect(shipTrail, player.x + vectA.x + Mathf.range(1.0), player.y + vectA.y + Mathf.range(1.0), player.rotation);
 		};
 		
 		if(target != null && shift > 0.1 && player.getTimer().get(4, 6) && player.achievedFlight){

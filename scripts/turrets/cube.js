@@ -28,19 +28,19 @@ const cubeEffect = newEffect(23, e => {
 const theLaser = extend(BasicBulletType, {
 	update: function(b){
 		if(b.timer.get(1, 29)){
-			Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), this.lengthC, false);
+			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), this.lengthC, false);
 		};
 	},
 	
 	/*init: function(b){
-		Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), 190.0);
+		Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), 190.0);
 	},*/
 	
 	hit: function(b, hitx, hity){
 		if(hitx != null && hity != null){
 			if(b.timer.get(2, 29)){
-				Effects.effect(cubeEffect, Color.valueOf("ec7458aa"), hitx, hity);
-				Damage.damage(b.getTeam(), hitx, hity, 120, 18000);
+				Effect.effect(cubeEffect, Color.valueOf("ec7458aa"), hitx, hity);
+				Damage.damage(b.team, hitx, hity, 120, 18000);
 			}
 		}
 	},
@@ -53,11 +53,11 @@ const theLaser = extend(BasicBulletType, {
 		const baseLen = length * f;
 
 		//Draw.color(Color.valueOf("a3e3ff"));
-		//Lines.lineAngle(b.x, b.y, b.rot(), baseLen);
+		//Lines.lineAngle(b.x, b.y, b.vel.angle(), baseLen);
 		Draw.color(Color.valueOf("a3e3ff"));
 		for(var i = 0; i < 4; i++){
 			Lines.stroke(7 * b.fout() * 1.9 * tscales[i]);
-			Lines.lineAngle(b.x, b.y, b.rot(), baseLen * lenscales[i]);
+			Lines.lineAngle(b.x, b.y, b.vel.angle(), baseLen * lenscales[i]);
 		};
 		Draw.reset();
 	}
@@ -125,10 +125,10 @@ const theCube = extendContent(ChargeTurret, "the-cube", {
 		const damageC = 1300;
 		const falloffC = 6;
 		
-		Effects.effect(cubeDestroyed, dx, dy, 0);
-		Effects.effect(cubeDestroyedB, dx, dy, 0);
-		Effects.effect(cubeDestroyedC, dx, dy, 0);
-		Effects.effect(Fx.blockExplosionSmoke, dx, dy, 0);
+		Effect.effect(cubeDestroyed, dx, dy, 0);
+		Effect.effect(cubeDestroyedB, dx, dy, 0);
+		Effect.effect(cubeDestroyedC, dx, dy, 0);
+		Effect.effect(Fx.blockExplosionSmoke, dx, dy, 0);
 		
 		for(var s = 1; s < falloffC; s++){
 			Damage.damage(Team.derelict, dx, dy, 150 + (radius / s), damageC / falloffC);
@@ -146,12 +146,12 @@ const theCube = extendContent(ChargeTurret, "the-cube", {
 	
 	drawLayer: function(tile){
 		entity = tile.ent();
-		const sizeB = 2.7 + Mathf.sin(Time.time(), 35, 0.12);
+		const sizeB = 2.7 + Mathf.sin(Time.time, 35, 0.12);
 		const sizeC = 4;
-		//const rotationB = entity.rotation + 45 + Mathf.sin(Time.time(), 4, 34);
-		const rotationB = Mathf.sin(Time.time(), 80, 24);
-		//const rotationC = (Mathf.sinDeg(entity.rotation) * 32) + Mathf.sin(Time.time(), 140, 35);
-		const rotationC = entity.rotation + Mathf.sin(Time.time(), 140, 35);
+		//const rotationB = entity.rotation + 45 + Mathf.sin(Time.time, 4, 34);
+		const rotationB = Mathf.sin(Time.time, 80, 24);
+		//const rotationC = (Mathf.sinDeg(entity.rotation) * 32) + Mathf.sin(Time.time, 140, 35);
+		const rotationC = entity.rotation + Mathf.sin(Time.time, 140, 35);
 		const directionB = new Vec3(1, 1, 0.5);
 		const directionC = new Vec3(0, 0, -1);
 		const shadeB = 3;

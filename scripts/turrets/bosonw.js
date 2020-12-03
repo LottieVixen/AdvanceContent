@@ -71,7 +71,7 @@ const bosonWDecay = extend(BasicBulletType, {
 	
 	update: function(b){
 		if(Mathf.chance(0.8)){
-			Effects.effect(bosonWEffect, b.x, b.y, b.rot() + 180)
+			Effect.effect(bosonWEffect, b.x, b.y, b.vel.angle() + 180)
 		}
 	}
 });
@@ -93,17 +93,17 @@ const bosonWbullet = extend(BasicBulletType, {
 	
 	update: function(b){
 		if(b.timer.get(0, 0.75 + b.fout())){
-			//Bullet.create(bosonWDecay, b, b.getTeam(), b.x, b.y, Mathf.random(360), Mathf.random(0.75, 1.25), 0.3 + b.fout());
-			Effects.effect(bosonWEffectLong, b.x, b.y, b.rot() + 180);
-			Bullet.create(bosonWDecay, b, b.getTeam(), b.x, b.y, b.rot() + (Mathf.range(360.0) / (this.speed / 2)), Mathf.random(0.9, 1.1), 0.3 + b.fout());
+			//Bullet.create(bosonWDecay, b, b.team, b.x, b.y, Mathf.random(360), Mathf.random(0.75, 1.25), 0.3 + b.fout());
+			Effect.effect(bosonWEffectLong, b.x, b.y, b.vel.angle() + 180);
+			Bullet.create(bosonWDecay, b, b.team, b.x, b.y, b.vel.angle() + (Mathf.range(360.0) / (this.speed / 2)), Mathf.random(0.9, 1.1), 0.3 + b.fout());
 		}
 	},
 	
 	despawned: function(b){
 		for(var i; i < 12; i++){
-			Bullet.create(bosonWDecay, b, b.getTeam(), b.x, b.y, Mathf.random(360), Mathf.random(0.75, 1.25), 0.3 + b.fout());
+			Bullet.create(bosonWDecay, b, b.team, b.x, b.y, Mathf.random(360), Mathf.random(0.75, 1.25), 0.3 + b.fout());
 		};
-		Effects.effect(bosonWHitEffect, b.x, b.y, b.rot())
+		Effect.effect(bosonWHitEffect, b.x, b.y, b.vel.angle())
 	}
 });
 bosonWbullet.speed = 8.5;

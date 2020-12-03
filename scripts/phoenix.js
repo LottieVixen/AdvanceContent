@@ -26,7 +26,7 @@ const resurrect = elib.newEffectWDraw(74, 45, e => {
 	
 	ashesRandom(e.id, 23, e.x, e.y, ((1 - e.finpow()) * 123), e.fin());
 	
-	var interpolate = Interpolation.pow3In.apply(e.fin());
+	var interpolate = Interp.pow3In.apply(e.fin());
 	var slopeB = (0.5 - Math.abs(interpolate - 0.5)) * 2;
 	
 	Draw.reset();
@@ -52,7 +52,7 @@ Events.on(EventType.WaveEvent, cons(event => {
 	effectArray = effectArray.filter(clearHolesb);
 	for(var s = 0; s < effectArray.length; s++){
 		effectArray[s].add();
-		Effects.effect(resurrect, effectArray[s].x, effectArray[s].y, effectArray[s].rotation, effectArray[s]);
+		Effect.effect(resurrect, effectArray[s].x, effectArray[s].y, effectArray[s].rotation, effectArray[s]);
 		effectArray[s] = null;
 	}
 }));
@@ -99,16 +99,16 @@ const phoenixMain = prov(() => {
 				effectArray.push(next);
 			};
 			
-			//Effects.effect(ashes, this.x, this.y, this.rotation);
+			//Effect.effect(ashes, this.x, this.y, this.rotation);
 		},
 		
 		update(){
 			this.super$update();
 			
-			Effects.effect(trailEffect, this.x, this.y, this.rotation, this.getType());
+			Effect.effect(trailEffect, this.x, this.y, this.rotation, this.getType());
 			
 			if(this.getDrawTime() > 0){
-				this.setDrawTime(this.getDrawTime() - Time.delta());
+				this.setDrawTime(this.getDrawTime() - Math.min(Core.graphics.getDeltaTime() * 60, 3));
 			};
 		},
 		
@@ -135,7 +135,7 @@ const phoenixMain = prov(() => {
 		added(){
 			this.super$added();
 			
-			//Effects.effect(resurrect, this.x, this.y, this.rotation, this);
+			//Effect.effect(resurrect, this.x, this.y, this.rotation, this);
 		}
 	});
 	//phoenixMainB.setDrawTime(74);
@@ -157,8 +157,8 @@ const phoenixBullet = extend(BasicBulletType, {
 	update(b){
 		this.super$update(b);
 		
-		if(Mathf.chance(0.5 * Time.delta())){
-			Effects.effect(this.trailEffect, this.backColor, b.x + Mathf.range(2), b.y + Mathf.range(2), b.rot());
+		if(Mathf.chance(0.5 * Math.min(Core.graphics.getDeltaTime() * 60, 3))){
+			Effect.effect(this.trailEffect, this.backColor, b.x + Mathf.range(2), b.y + Mathf.range(2), b.vel.angle());
 		};
 	},
 	
@@ -185,7 +185,7 @@ phoenixBullet.collidesTiles = true;
 phoenixBullet.collidesAir = true;
 phoenixBullet.pierce = false;
 phoenixBullet.statusDuration = 300;
-phoenixBullet.status = StatusEffects.burning;
+phoenixBullet.status = StatusEffect.burning;
 
 const phoenixWeapon = extendContent(Weapon, "phoenix-equip", {});
 

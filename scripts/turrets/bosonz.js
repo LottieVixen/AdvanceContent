@@ -7,10 +7,10 @@ const bosonZbullet = extend(BasicBulletType, {
 		const vel = b.velocity().len() * 4;
 		
 		Draw.color(Color.valueOf("a9d8ff"));
-		Draw.rect(this.region, b.x, b.y, 4.75, 4 + vel, b.rot() - 90);
+		Draw.rect(this.region, b.x, b.y, 4.75, 4 + vel, b.vel.angle() - 90);
 		
 		Draw.color(Color.valueOf("ffffff"));
-		Draw.rect(this.region, b.x, b.y, 3, 2.75 + (vel / 1.2), b.rot() - 90);
+		Draw.rect(this.region, b.x, b.y, 3, 2.75 + (vel / 1.2), b.vel.angle() - 90);
 	}
 });
 bosonZbullet.speed = 9.5;
@@ -43,7 +43,7 @@ const bosonZ = extendContent(PowerTurret, "z-boson", {
 		
 		Draw.color(Color.valueOf("00d9ff"), Color.valueOf("ccffff"), entity.heat);
 		Lines.stroke(1.5);
-		Lines.lineAngle(tile.drawx() + vec.x, tile.drawy() + vec.y, entity.rotation, entity.shots / 3.125, CapStyle.none);
+		Lines.lineAngle(tile.drawx() + vec.x, tile.drawy() + vec.y, entity.rotation, entity.shots / 3.125, false);
 		Draw.reset();
 	},
 	
@@ -109,12 +109,12 @@ const bosonZ = extendContent(PowerTurret, "z-boson", {
 		const shootEffectB = this.shootEffect == Fx.none ? this.peekAmmo(tile).shootEffect : this.shootEffect;
 		const smokeEffectB = this.smokeEffect == Fx.none ? this.peekAmmo(tile).smokeEffect : this.smokeEffect;
 
-		Effects.effect(shootEffectB, tile.drawx() + tr3.x, tile.drawy() + tr3.y, entity.rotation);
-		Effects.effect(smokeEffectB, tile.drawx() + tr3.x, tile.drawy() + tr3.y, entity.rotation);
+		Effect.effect(shootEffectB, tile.drawx() + tr3.x, tile.drawy() + tr3.y, entity.rotation);
+		Effect.effect(smokeEffectB, tile.drawx() + tr3.x, tile.drawy() + tr3.y, entity.rotation);
 		this.shootSound.at(tile, Mathf.random(0.9, 1.1) + (this.baseReloadSpeed(tile) / 3));
 
 		if(this.shootShake > 0){
-		Effects.shake(this.shootShake, this.shootShake, tile.entity);
+		Effect.shake(this.shootShake, this.shootShake, tile.entity);
 		};
 
 		entity.recoil = this.recoil;

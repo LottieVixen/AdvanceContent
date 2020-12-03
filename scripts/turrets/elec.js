@@ -34,7 +34,7 @@ const elecBullet = extend(ArtilleryBulletType, {
 	update: function(b){
 
 		if(b.timer.get(0, 2 + b.fslope() * 1.5)){
-			Effects.effect(this.trailEffect, this.backColor, b.x, b.y, b.fslope() * 4);
+			Effect.effect(this.trailEffect, this.backColor, b.x, b.y, b.fslope() * 4);
 		}
 	}
 });

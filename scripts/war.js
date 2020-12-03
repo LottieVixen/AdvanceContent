@@ -2,17 +2,17 @@ const warBullet = extend(BasicBulletType, {
 	hit(b, x, y){
 		this.super$hit(b, b.x, b.y);
 		
-		Damage.damage(b.getTeam(), b.x, b.y, 35, 52 * b.damageMultiplier());
+		Damage.damage(b.team, b.x, b.y, 35, 52 * b.damageMultiplier());
 	},
 	
 	update(b){
 		this.super$update(b);
 		
-		//b.velocity().rotate(Mathf.sin(Time.time() + (b.id * 4422), 9, 3) * Time.delta());
-		//b.velocity().rotate(Mathf.sin(Time.time(), 7, 3) * Time.delta());
+		//b.velocity().rotate(Mathf.sin(Time.time + (b.id * 4422), 9, 3) * Math.min(Core.graphics.getDeltaTime() * 60, 3));
+		//b.velocity().rotate(Mathf.sin(Time.time, 7, 3) * Math.min(Core.graphics.getDeltaTime() * 60, 3));
 		
-		if(Mathf.chance(Time.delta() * 0.2)){
-			Effects.effect(Fx.missileTrail, Pal.bulletYellowBack, b.x, b.y, 2.2);
+		if(Mathf.chance(Math.min(Core.graphics.getDeltaTime() * 60, 3) * 0.2)){
+			Effect.effect(Fx.missileTrail, Pal.bulletYellowBack, b.x, b.y, 2.2);
 		}
 	}
 });

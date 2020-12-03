@@ -16,7 +16,7 @@ const shotgunStrong = extend(BasicBulletType, {
 	
 	update: function(b){
 		if(b.timer.get(1, 17)){
-			Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), this.rayLength, false);
+			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), this.rayLength, false);
 		};
 	},
 	
@@ -24,13 +24,13 @@ const shotgunStrong = extend(BasicBulletType, {
 		Draw.color(Pal.bulletYellow, Pal.bulletYellowBack, b.fin());
 		
 		for(var i = 0; i < 7; i++){
-			Tmp.v1.trns(b.rot(), i * 20);
+			Tmp.v1.trns(b.vel.angle(), i * 20);
 			var sl = Mathf.clamp(b.fout() - 0.5) * (80 - i * 10);
-			Drawf.tri(b.x + Tmp.v1.x, b.y + Tmp.v1.y, 4, sl, b.rot() + 90);
-			Drawf.tri(b.x + Tmp.v1.x, b.y + Tmp.v1.y, 4, sl, b.rot() - 90);
+			Drawf.tri(b.x + Tmp.v1.x, b.y + Tmp.v1.y, 4, sl, b.vel.angle() + 90);
+			Drawf.tri(b.x + Tmp.v1.x, b.y + Tmp.v1.y, 4, sl, b.vel.angle() - 90);
 		}
-		Drawf.tri(b.x, b.y, 20 * b.fout(), ((this.rayLength * 1.33) + 30), b.rot());
-		Drawf.tri(b.x, b.y, 20 * b.fout(), 10, b.rot() + 180);
+		Drawf.tri(b.x, b.y, 20 * b.fout(), ((this.rayLength * 1.33) + 30), b.vel.angle());
+		Drawf.tri(b.x, b.y, 20 * b.fout(), 10, b.vel.angle() + 180);
 		Draw.reset();
 	}
 });
@@ -51,7 +51,7 @@ const shotgunMed = extend(BasicBulletType, {
 	
 	update: function(b){
 		if(b.timer.get(1, 17)){
-			Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), this.rayLength, false);
+			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), this.rayLength, false);
 		};
 	},
 	
@@ -59,13 +59,13 @@ const shotgunMed = extend(BasicBulletType, {
 		Draw.color(Pal.bulletYellow, Pal.bulletYellowBack, b.fin());
 		
 		for(var i = 0; i < 7; i++){
-			Tmp.v1.trns(b.rot(), i * 15);
+			Tmp.v1.trns(b.vel.angle(), i * 15);
 			var sl = Mathf.clamp(b.fout() - 0.5) * (80 - i * 10);
-			Drawf.tri(b.x + Tmp.v1.x, b.y + Tmp.v1.y, 4, sl, b.rot() + 90);
-			Drawf.tri(b.x + Tmp.v1.x, b.y + Tmp.v1.y, 4, sl, b.rot() - 90);
+			Drawf.tri(b.x + Tmp.v1.x, b.y + Tmp.v1.y, 4, sl, b.vel.angle() + 90);
+			Drawf.tri(b.x + Tmp.v1.x, b.y + Tmp.v1.y, 4, sl, b.vel.angle() - 90);
 		}
-		Drawf.tri(b.x, b.y, 20 * b.fout(), ((this.rayLength * 1.33) + 30), b.rot());
-		Drawf.tri(b.x, b.y, 20 * b.fout(), 10, b.rot() + 180);
+		Drawf.tri(b.x, b.y, 20 * b.fout(), ((this.rayLength * 1.33) + 30), b.vel.angle());
+		Drawf.tri(b.x, b.y, 20 * b.fout(), 10, b.vel.angle() + 180);
 		Draw.reset();
 	}
 });
@@ -86,7 +86,7 @@ const shotgunWeak = extend(BasicBulletType, {
 	
 	update: function(b){
 		if(b.timer.get(1, 17)){
-			Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), this.rayLength, false);
+			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), this.rayLength, false);
 		};
 	},
 	
@@ -94,13 +94,13 @@ const shotgunWeak = extend(BasicBulletType, {
 		Draw.color(Pal.bulletYellow, Pal.bulletYellowBack, b.fin());
 		
 		for(var i = 0; i < 7; i++){
-			Tmp.v1.trns(b.rot(), i * 10);
+			Tmp.v1.trns(b.vel.angle(), i * 10);
 			var sl = Mathf.clamp(b.fout() - 0.5) * (80 - i * 10);
-			Drawf.tri(b.x + Tmp.v1.x, b.y + Tmp.v1.y, 4, sl, b.rot() + 90);
-			Drawf.tri(b.x + Tmp.v1.x, b.y + Tmp.v1.y, 4, sl, b.rot() - 90);
+			Drawf.tri(b.x + Tmp.v1.x, b.y + Tmp.v1.y, 4, sl, b.vel.angle() + 90);
+			Drawf.tri(b.x + Tmp.v1.x, b.y + Tmp.v1.y, 4, sl, b.vel.angle() - 90);
 		}
-		Drawf.tri(b.x, b.y, 20 * b.fout(), ((this.rayLength * 1.33) + 30), b.rot());
-		Drawf.tri(b.x, b.y, 20 * b.fout(), 10, b.rot() + 180);
+		Drawf.tri(b.x, b.y, 20 * b.fout(), ((this.rayLength * 1.33) + 30), b.vel.angle());
+		Drawf.tri(b.x, b.y, 20 * b.fout(), 10, b.vel.angle() + 180);
 		Draw.reset();
 	}
 });
@@ -178,10 +178,10 @@ const ghost = extendContent(DoubleTurret, "ghost", {
 
 		entity = tile.ent();
 
-		Effects.effect(shotgunShootEffect, tile.drawx() + this.tr.x, tile.drawy() + this.tr.y, entity.rotation);
+		Effect.effect(shotgunShootEffect, tile.drawx() + this.tr.x, tile.drawy() + this.tr.y, entity.rotation);
 		Sounds.shotgun.at(tile, Mathf.random(0.9, 1.1));
 		
-		Effects.shake(3.6, 2, entity);
+		Effect.shake(3.6, 2, entity);
 
 		entity.recoil = this.recoil * 1.33;
 	},

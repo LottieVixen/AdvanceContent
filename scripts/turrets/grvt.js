@@ -32,12 +32,12 @@ const gravitonlaser = extend(BasicBulletType, {
 	update: function(b){
 		const trnsA = new Vec2();
 		
-		Effects.shake(0.7, 0.7, b.x, b.y);
+		Effect.shake(0.7, 0.7, b.x, b.y);
 		if(b.timer.get(1, 5)){
-			Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), 250.0, true);
+			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), 250.0, true);
 			for(var f = 0; f < 16; f++){
-				trnsA.trns(b.rot(), 15.625 * f);
-				Effects.effect(pullEffectEffect, b.x + trnsA.x, b.y + trnsA.y, b.rot());
+				trnsA.trns(b.vel.angle(), 15.625 * f);
+				Effect.effect(pullEffectEffect, b.x + trnsA.x, b.y + trnsA.y, b.vel.angle());
 			}
 		};
 	},
@@ -47,13 +47,13 @@ const gravitonlaser = extend(BasicBulletType, {
 		const trnsB = new Vec2();
 		const radius = 46;
 		
-		trnsB.trns(b.rot(), 8);
+		trnsB.trns(b.vel.angle(), 8);
 		
 		if(hitx != null && hity != null){
 			var tx = hitx + trnsB.x;
 			var ty = hity + trnsB.y;
 			
-			Units.nearbyEnemies(b.getTeam(), tx - radius, ty - radius, radius * 2, radius * 2, cons(unit => {
+			Units.nearbyEnemies(b.team, tx - radius, ty - radius, radius * 2, radius * 2, cons(unit => {
 				if(unit.withinDst(tx, ty, radius)){
 					if(unit instanceof SolidEntity){
 						var targetMass = 0;
@@ -81,15 +81,15 @@ const gravitonlaser = extend(BasicBulletType, {
 		const lenscales = [1.0, 1.08, 1.12, 1.16];
 		const tmpColor = new Color();
 
-		//Lines.lineAngle(b.x, b.y, b.rot(), baseLen);
+		//Lines.lineAngle(b.x, b.y, b.vel.angle(), baseLen);
 		//Draw.blend(Blending.additive);
 		for(var s = 0; s < 2; s++){
 			//Draw.color(colors[s]);
-			Draw.color(tmpColor.set(colors[s]).mul(1.0 + Mathf.absin(Time.time(), 1.5, 0.1)));
+			Draw.color(tmpColor.set(colors[s]).mul(1.0 + Mathf.absin(Time.time, 1.5, 0.1)));
 			for(var i = 0; i < 4; i++){
-				Tmp.v1.trns(b.rot() + 180.0, (lenscales[i] - 1.0) * 25.0);
-				Lines.stroke((9 + Mathf.absin(Time.time(), 3.0, 0.8)) * b.fout() * strokes[s] * tscales[i]);
-				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.rot(), 247.0 * b.fout() * lenscales[i]);
+				Tmp.v1.trns(b.vel.angle() + 180.0, (lenscales[i] - 1.0) * 25.0);
+				Lines.stroke((9 + Mathf.absin(Time.time, 3.0, 0.8)) * b.fout() * strokes[s] * tscales[i]);
+				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.vel.angle(), 247.0 * b.fout() * lenscales[i]);
 			}
 		};
 		//Draw.blend();

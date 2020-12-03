@@ -23,7 +23,7 @@ const healEffect = (a, b, heal) => {
 	
 	var data = [a, b];
 	
-	Effects.effect(healEffectB, a.x, a.y, 0, data);
+	Effect.effect(healEffectB, a.x, a.y, 0, data);
 };
 
 const healerWeap = extendContent(Weapon, "healer-equip", {});
@@ -192,7 +192,7 @@ const healerBase = prov(() => {
 			//print("update");
 			
 			/*if(b.retarget()){
-				var out = lib.findDamagedAlly(b.getTeam(), b.x, b.y, Number.MAX_VALUE, boolf(e => e.getID() != b.getID()));
+				var out = lib.findDamagedAlly(b.team, b.x, b.y, Number.MAX_VALUE, boolf(e => e.getID() != b.getID()));
 				b.setTarget(out);
 			};
 			

@@ -12,15 +12,15 @@ customShock.effect = shockEffect;
 
 const staticLaser = extend(BasicBulletType, {
 	update: function(b){
-		Effects.shake(0.4, 0.4, b.x, b.y);
+		Effect.shake(0.4, 0.4, b.x, b.y);
 		if(b.timer.get(1, 5)){
-			Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), this.lengthB, true);
+			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), this.lengthB, true);
 		};
 	},
 	
 	hit: function(b, hitx, hity){
 		if(hitx != null && hity != null){
-			Effects.effect(this.hitEffect, hitx, hity);
+			Effect.effect(this.hitEffect, hitx, hity);
 		}
 	},
 	
@@ -30,9 +30,9 @@ const staticLaser = extend(BasicBulletType, {
 		var array = [];
 		
 		for(var i = 0; i < this.sharpness; i++){
-			var rand = Mathf.clamp(Mathf.randomSeedRange((b.id + Mathf.ceil(i / 4) * 128) + (Mathf.ceil(Time.time() / 1.5) * this.sharpness), 256), -1, 1);
+			var rand = Mathf.clamp(Mathf.randomSeedRange((b.id + Mathf.ceil(i / 4) * 128) + (Mathf.ceil(Time.time / 1.5) * this.sharpness), 256), -1, 1);
 			
-			vec.trns(b.rot(), (this.lengthB / this.sharpness) * i, rand * 8 * Mathf.clamp(i, 0, 1) * b.fout());
+			vec.trns(b.vel.angle(), (this.lengthB / this.sharpness) * i, rand * 8 * Mathf.clamp(i, 0, 1) * b.fout());
 			vec.add(b.x, b.y);
 			
 			for(var s = 0; s < 2; s++){

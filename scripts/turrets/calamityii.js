@@ -3,28 +3,28 @@ const calamitylaserii = extend(BasicBulletType, {
 	update: function(b){
 		Effects.shake(1.2, 1.2, b.x, b.y);
 		if(b.timer.get(1, 5)){
-			Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), 390.0, true);
+			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), 390.0, true);
 		};
-		if(Mathf.chance(Time.delta() * 0.3)){
-			Tmp.v2.trns(b.rot() + 90.0, Mathf.range(7.0));
-			Lightning.create(b.getTeam(), Color.valueOf("ff9c5a"), 10, b.x + Tmp.v2.x, b.y + Tmp.v2.y, b.rot(), Mathf.random(47, 52));
+		if(Mathf.chance(Math.min(Core.graphics.getDeltaTime() * 60, 3) * 0.3)){
+			Tmp.v2.trns(b.vel.angle() + 90.0, Mathf.range(7.0));
+			Lightning.create(b.team, Color.valueOf("ff9c5a"), 10, b.x + Tmp.v2.x, b.y + Tmp.v2.y, b.vel.angle(), Mathf.random(47, 52));
 		};
-		if(Mathf.chance(Time.delta() * 0.2)){
-			Tmp.v2.trns(b.rot(), Mathf.random(0.5, 390.0));
-			Lightning.create(b.getTeam(), Color.valueOf("ff9c5a"), 16, b.x + Tmp.v2.x, b.y + Tmp.v2.y, Mathf.random(360), 12);
+		if(Mathf.chance(Math.min(Core.graphics.getDeltaTime() * 60, 3) * 0.2)){
+			Tmp.v2.trns(b.vel.angle(), Mathf.random(0.5, 390.0));
+			Lightning.create(b.team, Color.valueOf("ff9c5a"), 16, b.x + Tmp.v2.x, b.y + Tmp.v2.y, Mathf.random(360), 12);
 		};
 		if(Mathf.chance(0.9)){
-			//Tmp.v3.trns(b.rot(), Mathf.random(0.2, 390.0));
-			Tmp.v2.trns(b.rot(), Mathf.random(0.2, 390.0), Mathf.range(15.0));
-			Lightning.create(b.getTeam(), Color.valueOf("ff9c5a"), 12, b.x + Tmp.v2.x, b.y + Tmp.v2.y, b.rot(), Mathf.random(5, 16));
+			//Tmp.v3.trns(b.vel.angle(), Mathf.random(0.2, 390.0));
+			Tmp.v2.trns(b.vel.angle(), Mathf.random(0.2, 390.0), Mathf.range(15.0));
+			Lightning.create(b.team, Color.valueOf("ff9c5a"), 12, b.x + Tmp.v2.x, b.y + Tmp.v2.y, b.vel.angle(), Mathf.random(5, 16));
 		};
 		if(Mathf.chance(0.93)){
-			//Tmp.v3.trns(b.rot(), Mathf.random(0.2, 390.0));
-			Tmp.v2.trns(b.rot(), Mathf.random(0.2, 390.0), Mathf.range(10.0));
-			Lightning.create(b.getTeam(), Color.valueOf("ff9c5a"), 10, b.x + Tmp.v2.x, b.y + Tmp.v2.y, b.rot(), Mathf.random(8, 18));
+			//Tmp.v3.trns(b.vel.angle(), Mathf.random(0.2, 390.0));
+			Tmp.v2.trns(b.vel.angle(), Mathf.random(0.2, 390.0), Mathf.range(10.0));
+			Lightning.create(b.team, Color.valueOf("ff9c5a"), 10, b.x + Tmp.v2.x, b.y + Tmp.v2.y, b.vel.angle(), Mathf.random(8, 18));
 		};
 		if(Mathf.chance(0.9)){
-			Tmp.v2.trns(b.rot(), Mathf.random(2.9, 390.0));
+			Tmp.v2.trns(b.vel.angle(), Mathf.random(2.9, 390.0));
 			Damage.createIncend(b.x + Tmp.v2.x, b.y + Tmp.v2.y, 7, 2);
 		}
 	},
@@ -47,11 +47,11 @@ const calamitylaserii = extend(BasicBulletType, {
 		const tmpColor = new Color();
 
 		for(var s = 0; s < 4; s++){
-			Draw.color(tmpColor.set(colors[s]).mul(1.0 + Mathf.absin(Time.time(), 1.2, 0.4)));
+			Draw.color(tmpColor.set(colors[s]).mul(1.0 + Mathf.absin(Time.time, 1.2, 0.4)));
 			for(var i = 0; i < 4; i++){
-				Tmp.v1.trns(b.rot() + 180.0, (lenscales[i] - 0.9) * 55.0);
-				Lines.stroke((9 + Mathf.absin(Time.time(), 1.7, 3.1)) * b.fout() * strokes[s] * tscales[i]);
-				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.rot(), 370.0 * b.fout() * lenscales[i], CapStyle.none);
+				Tmp.v1.trns(b.vel.angle() + 180.0, (lenscales[i] - 0.9) * 55.0);
+				Lines.stroke((9 + Mathf.absin(Time.time, 1.7, 3.1)) * b.fout() * strokes[s] * tscales[i]);
+				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.vel.angle(), 370.0 * b.fout() * lenscales[i], false);
 			}
 		};
 		Draw.reset();
@@ -71,7 +71,7 @@ calamitylaserii.smokeEffect = Fx.none;
 
 const tmpCol = new Color();
 
-const pow6In = new Interpolation.PowIn(6);
+const pow6In = new Interp.PowIn(6);
 
 const calamityii = extendContent(LaserTurret, "ac-calamity-ii",{
 	load(){
@@ -103,10 +103,10 @@ const calamityii = extendContent(LaserTurret, "ac-calamity-ii",{
 		
 		if(entity.heat > 0.0001){
 			//Draw.color(1.0, 1.0 * Mathf.lerpDelta(entity.heat, 0.5, 0.15), 1.0 * Mathf.lerpDelta(entity.heat, 0.0, 0.6), entity.heat);
-			var r = Interpolation.pow2Out.apply(entity.heat);
-			var g = Interpolation.pow3In.apply(entity.heat) + ((1 - Interpolation.pow3In.apply(entity.heat)) * 0.12);
+			var r = Interp.pow2Out.apply(entity.heat);
+			var g = Interp.pow3In.apply(entity.heat) + ((1 - Interp.pow3In.apply(entity.heat)) * 0.12);
 			var b = pow6In.apply(entity.heat);
-			var a = Interpolation.pow2Out.apply(entity.heat);
+			var a = Interp.pow2Out.apply(entity.heat);
 			tmpCol.set(r, g, b, a);
 			Draw.color(tmpCol);
 			Draw.blend(Blending.additive);

@@ -1,9 +1,9 @@
 const falloutlaser = extend(BasicBulletType, {
 	
 	update: function(b){
-		Effects.shake(1.2, 1.2, b.x, b.y);
+		Effect.shake(1.2, 1.2, b.x, b.y);
 		if(b.timer.get(1, 5)){
-			Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), 290.0, true);
+			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.vel.angle(), 290.0, true);
 		}
 	},
 	
@@ -20,8 +20,8 @@ const falloutlaser = extend(BasicBulletType, {
 	draw: function(b){
 		
 		/*Draw.color(Color.valueOf("ec7458"));
-		Lines.stroke((9 + Mathf.absin(Time.time(), 0.8, 1.5)) * b.fout() * 3.2 * 1.0);
-		Lines.lineAngle(b.x, b.y, b.rot(), 310.0 * b.fout());
+		Lines.stroke((9 + Mathf.absin(Time.time, 0.8, 1.5)) * b.fout() * 3.2 * 1.0);
+		Lines.lineAngle(b.x, b.y, b.vel.angle(), 310.0 * b.fout());
 		Draw.reset();*/
 		const colors = [Color.valueOf("ec745855"), Color.valueOf("ec7458aa"), Color.valueOf("ff9c5a"), Color.valueOf("ffffff")];
 		const tscales = [1, 0.74, 0.5, 0.28];
@@ -30,14 +30,14 @@ const falloutlaser = extend(BasicBulletType, {
 		const tmpColor = new Color();
 		//const baseLen = 310.0 * b.fout();
 
-		//Lines.lineAngle(b.x, b.y, b.rot(), baseLen);
+		//Lines.lineAngle(b.x, b.y, b.vel.angle(), baseLen);
 		for(var s = 0; s < 4; s++){
 			//Draw.color(colors[s]);
-			Draw.color(tmpColor.set(colors[s]).mul(1.0 + Mathf.absin(Time.time(), 1.0, 0.2)));
+			Draw.color(tmpColor.set(colors[s]).mul(1.0 + Mathf.absin(Time.time, 1.0, 0.2)));
 			for(var i = 0; i < 4; i++){
-				Tmp.v1.trns(b.rot() + 180.0, (lenscales[i] - 0.9) * 35.0);
-				Lines.stroke((9 + Mathf.absin(Time.time(), 1.4, 1.5)) * b.fout() * strokes[s] * tscales[i]);
-				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.rot(), 280.0 * b.fout() * lenscales[i], CapStyle.none);
+				Tmp.v1.trns(b.vel.angle() + 180.0, (lenscales[i] - 0.9) * 35.0);
+				Lines.stroke((9 + Mathf.absin(Time.time, 1.4, 1.5)) * b.fout() * strokes[s] * tscales[i]);
+				Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.vel.angle(), 280.0 * b.fout() * lenscales[i], false);
 			}
 		};
 		Draw.reset();

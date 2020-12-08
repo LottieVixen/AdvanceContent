@@ -68,7 +68,36 @@ stormBullet.collidesAir = true;
 stormBullet.pierce = true;
 
 const trb = new Vec2();
-const storm = extendContent(ChargeTurret, "storm", {});
+const storm = extendContent(PowerTurret, "storm", {
+	"description": "A powerful version of Arc Caster.",
+	"chargeTime": 130,
+	"chargeMaxDelay": 24,
+	"health": 7600,
+	"size": 4,
+	"reloadTime": 180,
+	"range": 210,
+	"shootCone": 30,
+	"heatColor": "CCFFFF",
+	"ammoUseEffect": "none",
+	"shootEffect": "none",
+	"inaccuracy": 11.2,
+	"rotateSpeed": 5.5,
+	"recoilAmount": 2,
+	"powerUse": 33.4,
+	"hasPower": true,
+	"targetAir": true,
+	"shootSound": "flame",
+	"cooldown": 0.01,
+	"requirements": [
+		{ "item": "silicon", "amount": 320 },
+		{ "item": "chromium", "amount": 480 },
+		{ "item": "lanthanum", "amount": 290 },
+		{ "item": "advance-alloy", "amount": 210 },
+		{ "item": "titanium", "amount": 370 }
+	],
+	"category": "turret",
+	"research": "arc-caster"
+});
 
 storm.shootType = stormBullet;
 //storm.burstSpacing = 6;

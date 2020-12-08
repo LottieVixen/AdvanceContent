@@ -68,7 +68,36 @@ arcCasterBullet.collidesTiles = false;
 arcCasterBullet.collidesAir = true;
 arcCasterBullet.pierce = true;
 
-const arcCaster = extendContent(ChargeTurret, "arc-caster", {});
+const arcCaster = extendContent(PowerTurret, "arc-caster", {
+	name: "Arc Caster",
+	description: "Shoots a cloud that creates lightning. the cloud also bypasses defences",
+	chargeTime: 100,
+	chargeMaxDelay: 24,
+	health: 4600,
+	size: 3,
+	reloadTime: 120,
+	range: 190,
+	shootCone: 30,
+	heatColor: "CCFFFF",
+	ammoUseEffect: "none",
+	inaccuracy: 9.2,
+	rotateSpeed: 5.5,
+	recoilAmount: 1,
+	powerUse: 9.4,
+	hasPower: true,
+	targetAir: true,
+	shootSound: "flame",
+	cooldown: 0.01,
+	requirements: [
+		{ item: "silicon", amount: 180 },
+		{ item: "chromium", amount: 270 },
+		{ item: "lanthanum", amount: 160 },
+		{ item: "advance-alloy", amount: 120 },
+		{ item: "titanium", amount: 210 }
+	],
+	category: "turret",
+	research: "kelvin"
+});
 
 arcCaster.shootType = arcCasterBullet;
 //arcCaster.shootEffect = arcCasterShoot;

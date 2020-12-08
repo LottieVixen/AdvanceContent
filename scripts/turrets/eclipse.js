@@ -79,7 +79,40 @@ eclipseBullet.pierce = true;
 eclipseBullet.shootEffect = Fx.none;
 eclipseBullet.smokeEffect = Fx.none;
 
-const eclipse = extendContent(PowerTurret, "eclipse", {
+const eclipse = extendContent(ChargeTurret, "eclipse", {
+	"size": 7,
+	"health": 9000,
+	"range": 340,
+	"reloadTime": 280,
+	"coolantMultiplier": 2.4,
+	"shootCone": 40,
+	"powerUse": 19,
+	"shootShake": 3,
+	"shootEffect": "shootBigSmoke2",
+	"recoilAmount": 8,
+	"localizedName": "AC Eclipse",
+	"description": "Shoots a powerful beam, but it cant pierce.",
+	"hasPower": true,
+	"hasLiquids": true,
+	"shootSound": "laser",
+	"activeSound": "eclipse-beam",
+	"activeSoundVolume": 2.5,
+	"heatColor": "59a7ff",
+	"rotateSpeed": 1.9,
+	"canOverdrive": false,
+	"expanded": true,
+	"requirements": [
+		{ "item": "lead", "amount": 620 },
+		{ "item": "silicon", "amount": 760 },
+		{ "item": "chromium", "amount": 740 },
+		{ "item": "lanthanum", "amount": 320 },
+		{ "item": "titanium", "amount": 520 },
+		{ "item": "surge-alloy", "amount": 720 },
+		{ "item": "phase-fabric", "amount": 120 },
+		{ "item": "advance-alloy", "amount": 680 }
+	],
+	"category": "turret",
+	"research": "storm",
 	setStats(){
 		this.super$setStats();
 		
